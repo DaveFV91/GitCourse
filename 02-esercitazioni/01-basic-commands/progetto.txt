@@ -1,0 +1,19 @@
+PROGETTO: Sistema di Gestione Ordini
+==========================================
+Stato: Versione iniziale
+Data creazione: Febbraio 2026
+
+DESCRIZIONE
+-----------
+Questo file simula un progetto software.
+Ogni modifica rappresenta un'evoluzione del progetto.
+
+Il file viene usato per imparare i comandi base di Git:
+- git add    -> Aggiungere modifiche alla staging area
+- git commit -> Salvare le modifiche nel repository
+- git status -> Vedere lo stato attuale
+- git log    -> Vedere la storia dei commit
+
+==========================================
+ISTRUZIONI: Segui la guida.md per le modifiche da fare!
+==========================================

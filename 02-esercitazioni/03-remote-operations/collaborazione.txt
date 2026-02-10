@@ -1,0 +1,31 @@
+PROGETTO: Documentazione Condivisa
+==================================
+Repository: GitCourse
+Branch: main
+
+COLLABORATORI
+-------------
+- Tu (locale)
+- Team (remoto)
+
+STATO SYNC
+----------
+Ultimo push: [mai]
+Ultimo pull: [mai]
+
+==================================
+ISTRUZIONI
+==================================
+Questo file simula un documento condiviso tra più sviluppatori.
+
+Quando fai PUSH, le tue modifiche vanno al server remoto.
+Quando fai PULL, scarichi le modifiche degli altri.
+Quando fai FETCH, vedi cosa c'è di nuovo senza applicarlo.
+
+In un team reale, questo file verrebbe modificato da più persone,
+e Git aiuta a gestire queste modifiche concorrenti.
+
+ESERCIZIO: Modifica questo file e prova i comandi push/pull/fetch
+seguendo la guida.md
+
+==================================
