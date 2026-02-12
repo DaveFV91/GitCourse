@@ -1,24 +1,23 @@
 Version Control System
 ======================================================================
-Un **Version Control System (VCS)** è un sistema che registra le modifiche a uno o più file nel tempo, permettendo di:
-- 📜 **Tracciare la storia** di ogni modifica
-- ⏪ **Tornare indietro** a versioni precedenti
-- 👥 **Collaborare** con altri sviluppatori
-- 🔀 **Gestire versioni parallele** del codice
+A **Version Control System (VCS)** is a system that records changes to one or more files over time. The advantages are as follows:
+- 📜 **Track the history** of every change.
+- ⏪ **Revert** to previous versions.
+- 👥 **Collaborate** with other developers.
+- 🔀 **Manage parallel versions** of the code.
 
-Tipi di VCS
+Types of VCSs
 ----------------------------------------------------------------------
-### VCS locali
-Approccio iniziale dove le modifiche vengono salvate in una directory locale sul computer dell'utente. È semplice ma rischioso (se il disco si rompe, si perde tutto) e poco adatto alla collaborazione.
+### Local Version Control Systems
+It involves copying files to a local folder. It's simple but risky and not suitable for collaboration.
 
 :::mermaid
-flowchart TD
-    subgraph LOCAL["💻 Computer Locale"]
-        direction TB
-        A["📁 progetto_v1"] 
-        B["📁 progetto_v2"]
-        C["📁 progetto_finale"]
-        D["📁 progetto_finale_vero"]
+flowchart
+    subgraph LOCAL["💻 Local computer"]
+        A["📁 project_v1"] 
+        B["📁 project_v2"]
+        C["📁 project_final"]
+        D["📁 project_final_true"]
     end
     
     A --> B
@@ -26,15 +25,16 @@ flowchart TD
     C --> D
 :::
 
-### VCS Centralizzati (CVCS)
-Utilizzano un server centrale unico per memorizzare tutti i file e le versioni. Esempio: SVN, CVS. **Problemi**: Single point of failure, dipendenza dalla rete.
+### Centralized Version Control Systems
+They use a single central server to store all files and versions. Compared to a local system, it allows collaboration but has risks (single point of failure, network dependency). For many years, it was the standard.
+
 :::mermaid
 flowchart TD
-    subgraph SERVER["🖥️ Server Centrale"]
+    subgraph SERVER["🖥️ Centralized server"]
         S[("📦 Repository")]
     end
     
-    subgraph DEVS["👨‍💻 Sviluppatori"]
+    subgraph DEVS["👨‍💻 Developers"]
         A["💻 Dev 1"]
         B["💻 Dev 2"]
         C["💻 Dev 3"]
@@ -45,8 +45,8 @@ flowchart TD
     C --> S
 :::
 
-### VCS Distribuiti (DVCS) ✅
-Ogni sviluppatore ha una **copia completa** del repository. Esempio: **Git**, Mercurial. **Vantaggi**: Lavoro offline, backup distribuiti, velocità.
+### Distributed Version Control Systems (DVCS) ✅
+Each developer has a **full copy** of the repository. Example: **Git**. **Advantages**: offline work, distributed backups.
 
 :::mermaid
 flowchart TD
@@ -55,131 +55,132 @@ flowchart TD
     end
     
     subgraph DEV1["👨‍💻 Dev 1"]
-        L1[("📦 Repo Locale")]
+        L1[("📦 Local Repo")]
     end
     
     subgraph DEV2["👩‍💻 Dev 2"]
-        L2[("📦 Repo Locale")]
+        L2[("📦 Local Repo")]
     end
     
     L1 <-->|push/pull| R
     L2 <-->|push/pull| R
-    L1 <-.->|collaborazione| L2
+    L1 <-.->|collaboration| L2
 :::
-
----
 
 Git
 ======================================================================
-Git è un **DVCS** creato da Linus Torvalds nel 2005 per gestire lo sviluppo del kernel Linux.
-- Ogni versione di un progetto contiene una copia dei file modificati e, per gli altri, il riferimento alla precedente.
-- Ogni versione (o commit) è identificata da un codice hash di quaranta caratteri: di solito si usano i primi otto.
-- Ogni commit è salvato nella cartella nascosta **.git**, chiamata repository locale.
-- La repo locale non è la cartella di lavoro locale: Git non salva nulla fino a quando le modifiche non vengono committate.
-- Si trova a suo agio con file testuali (es. .txt, .py, .json, .tmdl ecc.) ma poco con file binari (es. .docx, .pbix).
+Git is a **DVCS** created by Linus Torvalds in 2005 to manage Linux kernel development.
+- Each version of a project contains a copy of the modified files and, for other files, a reference to the previous one.
+- Each version (or *commit*) is identified by a 40-character hash code: usually the first 8 are used.
+- Each commit is saved in the hidden **.git** folder, called the local repository.
+- The local repo is not the local working directory: Git doesn't save anything until the changes are committed.
+- It works well with text files (e.g., .txt, .py, .json, .tmdl, etc.) but not so well with binary files (e.g., .docx, .pbix).
 
 ::: mermaid
 sequenceDiagram
-Commit abcd1234 ->> Commit efgh5678: Salvo la nuova versione del file A
-Commit efgh5678 -->> Commit abcd1234: Il file B è recuperato dal commit precedente
+Commit abcd1234 ->> Commit efgh5678: ➕ Save the new version of file A
+Commit efgh5678 -->> Commit abcd1234: 🟰 File B is recovered from the previous commit
 :::
 
-Le aree di Git
+![CartellaGit.png](/images/CartellaGit.png)
+
+Git Areas
 ----------------------------------------------------------------------
 :::mermaid
 sequenceDiagram
-    participant working directory
-    participant staged
-    participant .git
-    participant repo remota
+    participant 📁 Working Directory
+    participant 📋 Stage Area
+    participant 📦 .git
+    participant 🌐 Remote Repo
 
-    working directory ->> staged: add
-    staged ->> .git: commit
-    .git ->> repo remota: push
-    repo remota -->> .git: fetch
-    .git -->> working directory: merge
-    repo remota ->> working directory: pull
+    📁 Working Directory ->> 📋 Stage Area: add
+    📋 Stage Area ->> 📦 .git: commit
+    📦 .git ->> 🌐 Remote Repo: push
+    🌐 Remote Repo -->> 📦 .git: fetch
+    📦 .git -->> 📁 Working Directory: merge
+    🌐 Remote Repo ->> 📁 Working Directory: pull
 :::
 
 | Area | Descrizione | Comando |
 |------|-------------|---------|
-| **Working Directory** | I file su cui stai lavorando | - |
-| **Staging Area** | Modifiche selezionate per il prossimo commit | `git add` |
-| **.git** | La storia completa del progetto | `git commit` |
-| **repo remota** | Repository online | `git push` per pubblicare, `git fetch` + `git merge` o `git pull` per scaricare  |
+| 📁 **Working Directory** | The files you are working on | - |
+| 📋 **Staging Area** | Changes selected for next commit | `git add` |
+| 📦 **.git** | The complete story of the project | `git commit` |
+| 🌐 **Remote Repo** | Online repository | `git push` to publish, `git fetch` + `git merge` (or `git pull`) to download  |
 
 
-Stati dei File
+State of Files in Git
 ----------------------------------------------------------------------
-Un file in Git può trovarsi in diversi stati:
+A file in Git can be in several states:
 
 ```mermaid
 stateDiagram-v2
     direction LR
-    [*] --> Untracked: 📄 Nuovo file
+    [*] --> Untracked: 📄 New file
     Untracked --> Staged: git add
     Staged --> Committed: git commit
-    Committed --> Modified: ✏️ Modifica
+    Committed --> Modified: ✏️ Edit
     Modified --> Staged: git add
-    Staged --> Modified: ✏️ Modifica
+    Staged --> Modified: ✏️ Edit
     Committed --> Untracked: git rm
 ```
 
-| Stato | Significato | Note |
+| Status | Meaning | Notes |
 |-------|-------------| ---- |
-| **Untracked** | Git non sta tracciando questo file | Un comando di ripristino di una vecchia versione, quindi, non impatta questi file |
-| **Staged** | File pronto per essere committato | Su VS Code il pulsante *Commit* esegue `git add` e `git commit` contemporaneamente |
-| **Committed** | File salvato nel repository | Posso recuperare vecchie versioni con `git checkout` (per vederne i contenuti) oppure `git restore` (per sovvrascrivere)
-| **Modified** | File modificato dopo l'ultimo commit e non ancora messo in stage | Un comando di ripristino di una vecchia versione può creare conflitti.
+| **Untracked** | Git isn't tracking this file | Therefore, reverting to an old version doesn't impact these files |
+| **Staged** | File ready to be committed | In VS Code, the *Commit* button runs `git add` and `git commit` simultaneously |
+| **Committed** | File saved in the repository | I can retrieve old versions with `git checkout` (to see its contents) or `git restore` (to overwrite)
+| **Modified** | File modified since the last commit and not yet staged | Reverting to an old version can cause conflicts.
 
 ### .gitignore
-Quando si lavora in un progetto, si può decidere quali file non debbano mai essere soggetti a controllo di versione (untracked).Per farlo è necessario compilare il file `.gitignore`. Esempi:
+When working in a project, you can decide which files should never be subject to version control (untracked). To do this, you need to compile the `.gitignore` file. Examples:
 
 ```bash
-*.log # ignora tutti i file con estensione .log
-/logs # ignora la cartella logs nella cartella corrente
-docs/ # ignora qualsiasi file di qualsiasi cartella chiamata docs
-docs/*.txt # ignora qualsiasi file .txt nella cartella docs
-docs/**/*.txt # ignora qualsiasi file .txt nella cartella docs e nelle sue sottocartelle
+*.log # ignores all files with the .log extension
+/logs # ignores the logs folder in the current folder
+docs/ # ignores any file in any folder named docs
+docs/*.txt # ignores any .txt file in the docs folder
+docs/**/*.txt # ignores any .txt file in the docs folder and its subfolders
 ```
----
+> 👀 Power BI `.gitignore`:
+![FileGitIgnorePBI.png](/images/FileGitIgnorePBI.png)
+Cache.abf files, being very large binary files, are usually untracked.
 
-Installare Git in Windows
+Install Git on Windows
 ======================================================================
-[https://git-scm.com/](https://git-scm.com/). Lasciarsi guidare dal wizard di installazione. Una volta installato, aprire da Start il prompt *git bach* e digitare `git config --list --show-origin` per vedere le attuali config. Ci sono tre ambienti:
+[https://git-scm.com/](https://git-scm.com/). Follow the installation wizard. Once installed, open the *git bach* prompt from the Start menu and type `git config --list --show-origin` to view the current configuration. There are three environments:
 
-| Ambiente   | Path del file di config              | Descrizione                        |
-| ---------- | ------------------------------------ | ---------------------------------- |
-| `--system` | `C:\Program Files\Git\etc\gitconfig` | Config di sistema.                 |
-| `--global` | `C:\Users\<NomeUtente>\.gitconfig`   | Config dell'utente.                |
-| `--local`  | `<CartellaDelProgetto>\.git\config`  | Config specifiche per il progetto. |
+| Environment | Path of the config file              | Description                        |
+| ----------- | ------------------------------------ | ---------------------------------- |
+| `--system`  | `C:\Program Files\Git\etc\gitconfig` | Sytem config.                      |
+| `--global`  | `C:\Users\<NomeUtente>\.gitconfig`   | User config.                       |
+| `--local`   | `<CartellaDelProgetto>\.git\config`  | Project-specific configurations.   |
 
-Bisogna configurare almeno quattro cose:
+You need to configure at least four things:
 
 ```bash
-git config --global user.name "Nome Cognome"
-git config --global user.email "Indirizzo email"
+git config --global user.name "<Name Surname>"
+git config --global user.email "<Email>"
 git config --global init.defaultBranch main
 git config --global pull.rebase "true"
 ```
 
-Farsi aiutare
+Get Help
 ===========================================================================
-  `git <comando> --help`.
+  `git <command> --help`.
 
+Basic Commands
+===========================================================================
 
-
-## Comandi Essenziali - Panoramica
-
-```mermaid
-flowchart TB
+:::mermaid
+flowchart
     subgraph SETUP["🚀 SETUP"]
         direction LR
         A["<code>git init</code>"]
         B["<code>git clone</code>"]
     end
     
-    subgraph LOCAL["📝 MODIFICHE LOCALI"]
+    subgraph LOCAL["📝 LOCAL CHANGES"]
         direction LR
         C["<code>git status</code>"]
         D["<code>git add</code>"]
@@ -199,4 +200,4 @@ flowchart TB
         J["<code>git pull</code>"]
         K["<code>git fetch</code>"]
     end
-```
+:::
