@@ -84,53 +84,43 @@ Commit efgh5678 -->> Commit abcd1234: 🟰 File B is recovered from the previous
 
 ![CartellaGit.png](/images/CartellaGit.png)
 
-Git Areas
+Git Areas & State of Files
 ----------------------------------------------------------------------
+A file moves across four areas. At each step, it changes state:
+
 :::mermaid
 sequenceDiagram
-    participant 📁 Working Directory
-    participant 📋 Stage Area
-    participant 📦 .git
-    participant 🌐 Remote Repo
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+    participant RR as 🌐 Remote Repo
 
-    📁 Working Directory ->> 📋 Stage Area: add
-    📋 Stage Area ->> 📦 .git: commit
-    📦 .git ->> 🌐 Remote Repo: push
-    🌐 Remote Repo -->> 📦 .git: fetch
-    📦 .git -->> 📁 Working Directory: merge
-    🌐 Remote Repo ->> 📁 Working Directory: pull
+    Note over WD: 📄 UNTRACKED / ✏️ MODIFIED
+    WD ->> SA: git add
+    Note over SA: ✅ STAGED
+    SA ->> GIT: git commit
+    Note over GIT: 💾 COMMITTED
+    GIT ->> RR: git push
+    RR -->> GIT: git fetch
+    GIT -->> WD: git merge
+    RR ->> WD: git pull (fetch+merge)
+    GIT -->> WD: git rm → 📄 UNTRACKED
+    Note over WD,RR: ✏️ Edit file → MODIFIED | git add → STAGED | git commit → COMMITTED | cycle repeats ↩
 :::
 
-| Area | Descrizione | Comando |
+| Area | Description | Command |
 |------|-------------|---------|
 | 📁 **Working Directory** | The files you are working on | - |
 | 📋 **Staging Area** | Changes selected for next commit | `git add` |
 | 📦 **.git** | The complete story of the project | `git commit` |
 | 🌐 **Remote Repo** | Online repository | `git push` to publish, `git fetch` + `git merge` (or `git pull`) to download  |
 
-
-State of Files in Git
-----------------------------------------------------------------------
-A file in Git can be in several states:
-
-```mermaid
-stateDiagram-v2
-    direction LR
-    [*] --> Untracked: 📄 New file
-    Untracked --> Staged: git add
-    Staged --> Committed: git commit
-    Committed --> Modified: ✏️ Edit
-    Modified --> Staged: git add
-    Staged --> Modified: ✏️ Edit
-    Committed --> Untracked: git rm
-```
-
 | Status | Meaning | Notes |
 |-------|-------------| ---- |
 | **Untracked** | Git isn't tracking this file | Therefore, reverting to an old version doesn't impact these files |
 | **Staged** | File ready to be committed | In VS Code, the *Commit* button runs `git add` and `git commit` simultaneously |
-| **Committed** | File saved in the repository | I can retrieve old versions with `git checkout` (to see its contents) or `git restore` (to overwrite)
-| **Modified** | File modified since the last commit and not yet staged | Reverting to an old version can cause conflicts.
+| **Committed** | File saved in the repository | I can retrieve old versions with `git checkout` (to see its contents) or `git restore` (to overwrite) |
+| **Modified** | File modified since the last commit and not yet staged | Reverting to an old version can cause conflicts |
 
 ### .gitignore
 When working in a project, you can decide which files should never be subject to version control (untracked). To do this, you need to compile the `.gitignore` file. Examples:
