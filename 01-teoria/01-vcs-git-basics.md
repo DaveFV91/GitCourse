@@ -7,8 +7,8 @@ A **Version Control System (VCS)** is a system that records changes to one or mo
 - ⏪ **Revert** to previous versions.
 - 👥 **Collaborate** with other developers.
 - 🔀 **Manage parallel versions** of the code.
-
-
+  
+  
 
 Types of VCSs
 ----------------------------------------------------------------------
@@ -77,8 +77,6 @@ flowchart TD
 
 ```
 
-
-
 Git
 ======================================================================
 
@@ -97,8 +95,6 @@ Commit efgh5678 -->> Commit abcd1234: 🟰 File B is recovered from the previous
 ```
 
 ![CartellaGit.png](/images/CartellaGit.png)
-
-
 
 Git Areas
 ----------------------------------------------------------------------
@@ -125,8 +121,6 @@ sequenceDiagram
 | 📦 **.git**              | The complete story of the project | `git commit`                                                                 |
 | 🌐 **Remote Repo**       | Online repository                 | `git push` to publish, `git fetch` + `git merge` (or `git pull`) to download |
 
-
-
 State of Files in Git
 ----------------------------------------------------------------------
 
@@ -152,12 +146,12 @@ sequenceDiagram
     Note over WD,RR: ✏️ Edit file → MODIFIED | git add → STAGED | git commit → COMMITTED | ciclo continuo ↩
 ```
 
-| Status        | Meaning                                                | Notes                                                                                                 |
-| ------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| **Untracked** | Git isn't tracking this file                           | Reverting to an old version doesn't impact these files                                                |
-| **Staged**    | File ready to be committed                             | In VS Code, the *Commit* button runs `git add` and `git commit` simultaneously                        |
-| **Committed** | File saved in the repository                           | I can retrieve old versions with `git checkout` (to see its contents) or `git restore` (to overwrite) |
-| **Modified**  | File modified since the last commit and not yet staged | Reverting to an old version can cause conflicts.                                                      |
+| Status | Meaning | Notes |
+| - | - | - |
+**Untracked** | The file exists in the working directory but is not tracked by Git. | Rewinding to a previous commit does not affect untracked files, since they are outside version control.
+**Staged** | The file has been added to the staging area and is ready to be committed. | In Visual Studio Code, the *Commit* action implicitly performs `git add` followed by `git commit`.
+**Committed** | The file has been written to the repository’s history | Previous revisions can be inspected with `git checkout <commit>` or restored using `git restore --source <commit>`.
+**Modified** | The file has local changes that are not yet staged. | Switching branches while having modified files (not yet staged) may lead to merge conflicts due to divergent file versions.
 
 
 
@@ -198,14 +192,10 @@ git config --global user.email "<Email>"
 git config --global init.defaultBranch main
 ```
 
-
-
 Get Help
 ===========================================================================
 
 `git <command> --help`
-
-
 
 Documentation
 ===========================================================================
@@ -213,8 +203,6 @@ Documentation
 [ProGit.pdf](https://git-scm.com/book/en/v2)
 
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-
-
 
 Basic Commands
 ===========================================================================
@@ -226,21 +214,21 @@ flowchart
         A["<code>git init</code>"]
         B["<code>git clone</code>"]
     end
-    
+
     subgraph LOCAL["📝 LOCAL CHANGES"]
         direction LR
         C["<code>git status</code>"]
         D["<code>git add</code>"]
         E["<code>git commit</code>"]
     end
-    
+
     subgraph BRANCH["🌿 BRANCHING"]
         direction LR
         F["<code>git branch</code>"]
         G["<code>git checkout</code>"]
         H["<code>git merge</code>"]
     end
-    
+
     subgraph REMOTE["🔄 REMOTE"]
         direction LR
         I["<code>git push</code>"]
