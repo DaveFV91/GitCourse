@@ -7,34 +7,6 @@ Imparare a lavorare con repository remoti: `remote`, `push`, `pull`, `fetch`, `c
 
 ---
 
-## Concetti Chiave
-
-```mermaid
-flowchart TB
-    subgraph REMOTE["☁️ REMOTE (Origin)"]
-        R[("🌐 GitHub/GitLab")]
-    end
-    
-    subgraph LOCAL["💻 LOCALE"]
-        L[("📦 Repository Locale")]
-    end
-    
-    L -->|"<b>git push</b> ↑"| R
-    R -->|"<b>git fetch</b> ↓"| L
-    R -->|"<b>git pull</b> ↓"| L
-    
-    style REMOTE fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px
-    style LOCAL fill:#E3F2FD,stroke:#1565C2,stroke-width:2px
-    style R fill:#FFB300,stroke:#FF6F00,stroke-width:3px,color:#fff
-    style L fill:#1976D2,stroke:#0D47A1,stroke-width:3px,color:#fff
-    
-    linkStyle 0 stroke:#43A047,stroke-width:3px
-    linkStyle 1 stroke:#8E24AA,stroke-width:2px
-    linkStyle 2 stroke:#1976D2,stroke-width:3px
-```
-
----
-
 ## Differenza tra Fetch, Pull e Push
 
 ```mermaid
@@ -45,16 +17,6 @@ flowchart LR
         C["<code>git pull</code>"] --> D["⬇️ Scarica <b>E</b> applica<br/>modifiche"]
         E["<code>git push</code>"] --> F["⬆️ Invia le tue<br/>modifiche"]
     end
-    
-    style COMMANDS fill:#FAFAFA,stroke:#78909C,stroke-width:2px
-    style A fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style B fill:#E1BEE7,stroke:#7B1FA2,stroke-width:2px,color:#333
-    style C fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style D fill:#BBDEFB,stroke:#1565C2,stroke-width:2px,color:#333
-    style E fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style F fill:#C8E6C9,stroke:#388E3C,stroke-width:2px,color:#333
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
 ```
 
 | Comando | Cosa fa | Quando usarlo |
@@ -278,11 +240,7 @@ flowchart TD
 
 **Esempio di conflitto nel file**:
 ```
-<<<<<<< HEAD
 La tua versione
-=======
-La versione remota
->>>>>>> origin/main
 ```
 
 ---
