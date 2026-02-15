@@ -14,7 +14,7 @@ Learn the fundamental Git commands: `init`, `status`, `add`, `commit`, `log`, `d
 
 ## Exercise Flow
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
@@ -38,9 +38,9 @@ sequenceDiagram
     SA ->> GIT: git commit
 
     Note over WD,GIT: Step 5 — Navigate HEAD (checkout old commit & back)
-    GIT -->> WD: git checkout ‹hash›
+    GIT -->> WD: git checkout <hash>
     GIT -->> WD: git checkout main
-:::
+```
 
 ---
 
