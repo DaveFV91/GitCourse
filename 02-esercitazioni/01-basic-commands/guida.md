@@ -75,14 +75,14 @@ git status
 
 Where are we in the Git areas? The file exists only in the Working Directory:
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
     participant GIT as 📦 .git
 
     Note over WD: 📄 progetto.txt → UNTRACKED
-:::
+```
 
 ---
 
@@ -105,7 +105,7 @@ git log --oneline --graph --all
 
 The file has traveled across all three local areas:
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
@@ -116,7 +116,7 @@ sequenceDiagram
     Note over SA: ✅ STAGED
     SA ->> GIT: git commit
     Note over GIT: 💾 COMMITTED
-:::
+```
 
 ---
 
@@ -184,7 +184,7 @@ git log --oneline --graph --all
 
 The cycle repeats — each modify/add/commit moves your changes through the areas:
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
@@ -196,7 +196,7 @@ sequenceDiagram
     SA ->> GIT: git commit
     Note over GIT: 💾 COMMITTED
     Note over WD,GIT: ✏️ Edit → MODIFIED | git add → STAGED | git commit → COMMITTED | cycle repeats ↩
-:::
+```
 
 ---
 

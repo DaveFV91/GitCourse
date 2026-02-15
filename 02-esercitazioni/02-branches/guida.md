@@ -36,7 +36,7 @@ gitGraph
 
 ## Exercise Flow
 
-:::mermaid
+```mermaid
 flowchart LR
     A["<b>1</b><br/>Check branch"] --> B["<b>2</b><br/>Create branch"]
     B --> C["<b>3</b><br/>Modify & Commit"]
@@ -52,7 +52,7 @@ flowchart LR
     style F fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
 
     linkStyle default stroke:#455A64,stroke-width:2px
-:::
+```
 
 ---
 
@@ -105,7 +105,7 @@ git log --oneline --graph --all
 
 Notice: HEAD has moved to the new branch. The file is **untracked** in the Working Directory:
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
@@ -113,7 +113,7 @@ sequenceDiagram
 
     Note over WD: 📄 feature.txt → UNTRACKED
     Note over GIT: HEAD → feature/login
-:::
+```
 
 ---
 
@@ -157,7 +157,7 @@ git log --oneline --graph --all
 
 The file moved through the areas on the `feature/login` branch:
 
-:::mermaid
+```mermaid
 sequenceDiagram
     participant WD as 📁 Working Directory
     participant SA as 📋 Stage Area
@@ -168,7 +168,7 @@ sequenceDiagram
     Note over SA: ✅ STAGED
     SA ->> GIT: git commit
     Note over GIT: 💾 COMMITTED on feature/login
-:::
+```
 
 ---
 
