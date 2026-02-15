@@ -1,25 +1,25 @@
-APP: Sistema di Autenticazione
+APP: Authentication System
 ==============================
 Branch: main
-Versione: 1.0.0
+Version: 1.0.0
 
-MODULI ATTIVI
+ACTIVE MODULES
 -------------
-[x] Configurazione base
-[ ] Login utente
-[ ] Registrazione
-[ ] Reset password
+[x] Base configuration
+[ ] User login
+[ ] Registration
+[ ] Password reset
 
 ==============================
-ISTRUZIONI
+INSTRUCTIONS
 ==============================
-Questo file viene usato per imparare i branch di Git.
+This file is used to learn about Git branches.
 
-Quando crei un branch e modifichi questo file,
-le modifiche rimangono isolate in quel branch.
+When you create a branch and modify this file,
+the changes remain isolated in that branch.
 
-Quando torni a 'main', vedrai la versione originale.
-Dopo il merge, le modifiche saranno unite!
+When you switch back to 'main', you'll see the original version.
+After the merge, the changes will be combined!
 
-Segui la guida.md per le istruzioni complete.
+Follow the walkthrough for complete instructions.
 ==============================

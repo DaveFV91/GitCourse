@@ -38,7 +38,7 @@ gitGraph
 
 ```mermaid
 flowchart LR
-    A["<b>1</b><br/>Check branch"] --> B["<b>2</b><br/>Create branch"]
+    A["<b>1</b><br/>Check branch"] --> B["<b>2</b><br/>Add file &<br/>Create branch"]
     B --> C["<b>3</b><br/>Modify & Commit"]
     C --> D["<b>4</b><br/>Switch to main"]
     D --> E["<b>5</b><br/>Merge"]
@@ -79,7 +79,18 @@ You should see the commits from Exercise 1. HEAD points to `main`.
 
 ---
 
-## Step 2: Create a New Branch
+## Step 2: Add the Feature File & Create a New Branch
+
+Copy the file `feature.txt` (from `02-exercises/02-branches/`) into your project folder.
+
+Stage and commit it on `main`:
+
+```bash
+git add feature.txt
+git commit -m "add feature.txt base file"
+```
+
+Now create the new branch and switch to it:
 
 ```bash
 git checkout -b feature/login
@@ -90,30 +101,19 @@ git switch -c feature/login
 ```mermaid
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#C8E6C9', 'commitLabelFontSize': '11px'}}}%%
 gitGraph
-    commit id: "main-1"
-    commit id: "main-2"
+    commit id: "main - commit-1"
+    commit id: "..."
+    commit id: "📄 add feature.txt"
     branch feature/login
     commit id: "⭐ YOU ARE HERE" type: HIGHLIGHT
 ```
-
-Copy the file `feature.txt` (from `02-esercitazioni/02-branches/`) into your project folder.
 
 ```bash
 git status
 git log --oneline --graph --all
 ```
 
-Notice: HEAD has moved to the new branch. The file is **untracked** in the Working Directory:
-
-```mermaid
-sequenceDiagram
-    participant WD as 📁 Working Directory
-    participant SA as 📋 Stage Area
-    participant GIT as 📦 .git
-
-    Note over WD: 📄 feature.txt → UNTRACKED
-    Note over GIT: HEAD → feature/login
-```
+Notice: HEAD has moved to the new branch. The file `feature.txt` is tracked and identical on both branches for now.
 
 ---
 
@@ -163,7 +163,7 @@ sequenceDiagram
     participant SA as 📋 Stage Area
     participant GIT as 📦 .git
 
-    Note over WD: 📄 UNTRACKED → ✏️ MODIFIED
+    Note over WD: 📄 feature.txt → ✏️ MODIFIED
     WD ->> SA: git add
     Note over SA: ✅ STAGED
     SA ->> GIT: git commit
@@ -189,11 +189,11 @@ git log --oneline --graph --all
 ```mermaid
 flowchart LR
     subgraph FEATURE[" 🌿 feature/login "]
-        F["📄 feature.txt<br/><b>v1.1</b>"]
+        F["📄 feature.txt<br/><b>modified</b>"]
     end
     
     subgraph MAIN[" 🔵 main "]
-        M["📄 feature.txt<br/><b>v1.0</b>"]
+        M["📄 feature.txt<br/><b>original</b>"]
     end
     
     F -.->|"<code>checkout main</code>"| M
@@ -222,6 +222,7 @@ git merge feature/login
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
 gitGraph
     commit id: "🌱 init"
+    commit id: "📄 feature.txt"
     branch feature/login
     commit id: "🔐 login"
     checkout main
