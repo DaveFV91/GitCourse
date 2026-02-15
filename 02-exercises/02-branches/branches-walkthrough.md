@@ -37,21 +37,32 @@ gitGraph
 ## Exercise Flow
 
 ```mermaid
-flowchart LR
-    A["<b>1</b><br/>Check branch"] --> B["<b>2</b><br/>Add file &<br/>Create branch"]
-    B --> C["<b>3</b><br/>Modify & Commit"]
-    C --> D["<b>4</b><br/>Switch to main"]
-    D --> E["<b>5</b><br/>Merge"]
-    E --> F["<b>6</b><br/>Cleanup"]
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
 
-    style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style B fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style C fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
-    style D fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style E fill:#1565C2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style F fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
+    Note over WD,GIT: Step 1 — Check current branch (git branch)
 
-    linkStyle default stroke:#455A64,stroke-width:2px
+    Note over WD,GIT: Step 2 — Add feature.txt & create branch
+    WD ->> SA: git add feature.txt
+    SA ->> GIT: git commit (on main)
+    Note over GIT: git checkout -b feature/login
+
+    Note over WD,GIT: Step 3 — Modify feature.txt & commit on branch
+    Note over WD: ✏️ MODIFIED
+    WD ->> SA: git add
+    SA ->> GIT: git commit (on feature/login)
+
+    Note over WD,GIT: Step 4 — Switch back to main
+    GIT -->> WD: git checkout main
+    Note over WD: 📄 feature.txt → original version
+
+    Note over WD,GIT: Step 5 — Merge feature/login into main
+    GIT -->> GIT: git merge feature/login
+
+    Note over WD,GIT: Step 6 — Cleanup (delete branch)
+    GIT -->> GIT: git branch -d feature/login
 ```
 
 ---
@@ -221,7 +232,8 @@ git merge feature/login
 ```mermaid
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
 gitGraph
-    commit id: "🌱 init"
+    commit id: "main - commit-1"
+    commit id: "..."
     commit id: "📄 feature.txt"
     branch feature/login
     commit id: "🔐 login"
