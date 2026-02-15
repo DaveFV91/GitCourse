@@ -1,18 +1,22 @@
-# Esercitazione 2: Git Branches
+# Exercise 2: Git Branches
 
-## Obiettivo
-Imparare a creare, navigare e unire branch: `branch`, `checkout`, `switch`, `merge`.
+## Goal
+Learn to create, navigate, and merge branches: `branch`, `checkout`, `switch`, `merge`.
 
-**Tempo stimato**: 15 minuti
+> 💡 **Tip**: After every meaningful change, run:
+> ```bash
+> git status
+> git log --oneline --graph --all
+> ```
 
 ---
 
-## Cos'è un Branch?
+## What is a Branch?
 
-Un **branch** è una linea di sviluppo indipendente. Permette di:
-- Lavorare su feature senza toccare il codice principale
-- Sperimentare senza rischi
-- Collaborare su diverse funzionalità in parallelo
+A **branch** is an independent line of development. It lets you:
+- Work on features without touching the main codebase
+- Experiment without risk
+- Collaborate on different features in parallel
 
 ```mermaid
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
@@ -30,46 +34,56 @@ gitGraph
 
 ---
 
-## Flusso Esercitazione
+## Exercise Flow
 
-```mermaid
-flowchart TD
-    A["<b>1</b><br/>Vedi branch attuale"] --> B["<b>2</b><br/>Crea nuovo branch"]
-    B --> C["<b>3</b><br/>Lavora sul branch"]
-    C --> D["<b>4</b><br/>Torna a main"]
-    D --> E["<b>5</b><br/>Merge del branch"]
-    
+:::mermaid
+flowchart LR
+    A["<b>1</b><br/>Check branch"] --> B["<b>2</b><br/>Create branch"]
+    B --> C["<b>3</b><br/>Modify & Commit"]
+    C --> D["<b>4</b><br/>Switch to main"]
+    D --> E["<b>5</b><br/>Merge"]
+    E --> F["<b>6</b><br/>Cleanup"]
+
     style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
     style B fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
     style C fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
     style D fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
     style E fill:#1565C2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
+    style F fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
+
     linkStyle default stroke:#455A64,stroke-width:2px
-```
+:::
 
 ---
 
-## Passo 1: Controlla il branch attuale
+## Step 1: Check the Current Branch
+
+From your `my-project` folder (created in Exercise 1):
 
 ```bash
-cd 02-esercitazioni/02-branches
 git branch
 ```
 
-**Output atteso**: 
+**Expected output**: 
 ```
 * main
 ```
 
-L'asterisco indica il branch corrente.
+The asterisk marks the current branch.
+
+```bash
+git log --oneline --graph --all
+```
+
+You should see the commits from Exercise 1. HEAD points to `main`.
 
 ---
-## Passo 3: Crea un nuovo branch
+
+## Step 2: Create a New Branch
 
 ```bash
 git checkout -b feature/login
-# oppure (Git 2.23+)
+# or (Git 2.23+)
 git switch -c feature/login
 ```
 
@@ -79,96 +93,98 @@ gitGraph
     commit id: "main-1"
     commit id: "main-2"
     branch feature/login
-    commit id: "⭐ QUI SEI TU" type: HIGHLIGHT
+    commit id: "⭐ YOU ARE HERE" type: HIGHLIGHT
 ```
 
-Aggiungi il file `feature.txt` alla repository.
+Copy the file `feature.txt` (from `02-esercitazioni/02-branches/`) into your project folder.
 
 ```bash
-git log --oneline --all
+git status
+git log --oneline --graph --all
 ```
-HEAD si è spostato nel nuovo branch creato.
+
+Notice: HEAD has moved to the new branch. The file is **untracked** in the Working Directory:
+
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+
+    Note over WD: 📄 feature.txt → UNTRACKED
+    Note over GIT: HEAD → feature/login
+:::
 
 ---
 
-## Passo 4: Modifica il file nel nuovo branch
+## Step 3: Modify, Stage and Commit
 
-Modifica `feature.txt`:
+Edit `feature.txt` to update it:
 
 ```
-APP: Sistema di Autenticazione
+APP: Authentication System
 ==============================
-Branch: feature/login       <- MODIFICATO!
-Versione: 1.1.0-dev         <- MODIFICATO!
+Branch: feature/login       <- CHANGED!
+Version: 1.1.0-dev          <- CHANGED!
 
-MODULI ATTIVI
+ACTIVE MODULES
 -------------
-[x] Configurazione base
-[x] Login utente            <- COMPLETATO!
-[ ] Registrazione
-[ ] Reset password
+[x] Base configuration
+[x] User login              <- DONE!
+[ ] Registration
+[ ] Password reset
 
-DETTAGLI LOGIN (nuovo!)
+LOGIN DETAILS (new!)
 -----------------------
-- Form username/password
-- Validazione input
-- Sessione utente
-```
+- Username/password form
+- Input validation
+- User session
 
-Commit:
-```bash
-git add feature.txt
-git commit -m "feat(login): implementa modulo login"
-```
-
----
-## TODO Fare una modifica sola
-## Passo 5: Fai un'altra modifica
-
-Aggiungi ancora al file:
-
-```
-LOG SVILUPPO
+DEVELOPMENT LOG
 ------------
-[2026-02-10] Aggiunto form login
-[2026-02-10] Aggiunta validazione
+[2026-02-13] Added login form
+[2026-02-13] Added validation
 ```
 
-Commit:
+Stage and commit:
+
 ```bash
 git add feature.txt
-git commit -m "docs: aggiunge log sviluppo"
+git commit -m "feat(login): implement login module with dev log"
+git status
+git log --oneline --graph --all
 ```
+
+The file moved through the areas on the `feature/login` branch:
+
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+
+    Note over WD: 📄 UNTRACKED → ✏️ MODIFIED
+    WD ->> SA: git add
+    Note over SA: ✅ STAGED
+    SA ->> GIT: git commit
+    Note over GIT: 💾 COMMITTED on feature/login
+:::
 
 ---
 
-## Passo 6: Visualizza i branch
-
-```bash
-git branch -v
-git log --graph --all
-```
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD'}}}%%
-gitGraph
-    commit id: "🌱 init"
-    branch feature/login
-    commit id: "🔐 login impl"
-    commit id: "📝 docs"
-```
-
----
-
-## Passo 7: Torna al branch main
+## Step 4: Switch Back to Main
 
 ```bash
 git checkout main
-# oppure
+# or
 git switch main
 ```
 
-**Cosa noti?** Il file `feature.txt` è tornato alla versione originale!
+**What do you notice?** Open `feature.txt` — the file is back to its original version! Your changes exist only on `feature/login`.
+
+```bash
+git log --oneline --graph --all
+```
 
 ```mermaid
 flowchart LR
@@ -190,11 +206,13 @@ flowchart LR
     linkStyle 0 stroke:#78909C,stroke-width:2px,stroke-dasharray:5
 ```
 
+> 💡 This is the power of branches: isolated changes. Each branch has its own version of the files.
+
 ---
 
-## Passo 8: Merge del branch
+## Step 5: Merge the Branch
 
-Unisci le modifiche di `feature/login` in `main`:
+Merge the changes from `feature/login` into `main`:
 
 ```bash
 git merge feature/login
@@ -206,72 +224,48 @@ gitGraph
     commit id: "🌱 init"
     branch feature/login
     commit id: "🔐 login"
-    commit id: "📝 docs"
     checkout main
     merge feature/login id: "🔀 MERGE" type: HIGHLIGHT
 ```
 
-**Risultato**: Le modifiche sono ora in `main`!
-
----
-
-## Passo 9: Verifica il merge
+Verify the result:
 
 ```bash
-git log --oneline --graph
+git log --oneline --graph --all
 cat feature.txt
 ```
 
-Il file ora contiene tutte le modifiche fatte nel branch `feature/login`.
+The file now contains all the changes made on the `feature/login` branch. **The merge brought them into `main`.**
 
 ---
 
-## Passo 10: Elimina il branch (opzionale)
+## Step 6: Cleanup
 
-Dopo il merge, puoi eliminare il branch:
+After a successful merge, you can delete the branch:
 
 ```bash
 git branch -d feature/login
+git log --oneline --graph --all
 ```
 
----
-## todo Non li gestiamo qui
-## Gestione Conflitti (Bonus)
-
-Cosa succede se due branch modificano la stessa riga?
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFCDD2', 'commitLabelFontSize': '11px'}}}%%
-gitGraph
-    commit id: "🌱 init"
-    branch feature-a
-    commit id: "modifica riga 5"
-    checkout main
-    branch feature-b
-    commit id: "altra modifica riga 5"
-    checkout main
-    merge feature-a
-    merge feature-b id: "⚠️ CONFLITTO!" type: REVERSE
-```
-
-Git ti chiederà di risolvere manualmente il conflitto!
+The commits remain in the history — only the branch label is removed.
 
 ---
 
-## Riepilogo Comandi
+## Command Summary
 
-| Comando | Descrizione |
+| Command | Description |
 |---------|-------------|
-| `git branch` | Lista branch |
-| `git branch <nome>` | Crea branch |
-| `git checkout <branch>` | Cambia branch |
-| `git switch <branch>` | Cambia branch (nuovo) |
-| `git checkout -b <nome>` | Crea e cambia branch |
-| `git merge <branch>` | Unisce branch |
-| `git branch -d <nome>` | Elimina branch |
+| `git branch` | List branches |
+| `git branch <name>` | Create a branch |
+| `git checkout <branch>` | Switch to a branch |
+| `git switch <branch>` | Switch to a branch (modern) |
+| `git checkout -b <name>` | Create and switch to a branch |
+| `git merge <branch>` | Merge a branch into current |
+| `git branch -d <name>` | Delete a branch |
 
 ---
 
-## Prossimo Passo
+## Next Step
 
-➡️ Vai alla [esercitazione sulle Remote Operations](../03-remote-operations/guida.md)
+➡️ Go to the [Remote Operations exercise](../03-remote-operations/guida.md)

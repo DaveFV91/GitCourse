@@ -1,278 +1,274 @@
-# Esercitazione 1: Git Basic Commands
+# Exercise 1: Git Basic Commands
 
-## Obiettivo
-Imparare i comandi fondamentali di Git: `init`, `status`, `add`, `commit`, `log`.
+## Goal
+Learn the fundamental Git commands: `init`, `status`, `add`, `commit`, `log`, `diff`, `checkout`.
 
-**Tempo stimato**: 15 minuti
-
----
-
-## Flusso Esercitazione
-
-```mermaid
-flowchart LR
-    A["<b>1</b><br/>Crea repo"] --> B["<b>2</b><br/>Crea file"]
-    B --> C["<b>3</b><br/>git status"]
-    C --> D["<b>4</b><br/>git add"]
-    D --> E["<b>5</b><br/>git commit"]
-    E --> F["<b>6</b><br/>Modifica"]
-    F --> C
-    
-    style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style B fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
-    style C fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style D fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style E fill:#1565C2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style F fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-    linkStyle 5 stroke:#E65100,stroke-width:2px,stroke-dasharray:5
-```
+> 💡 **Tip**: After every meaningful change, run these two commands to observe what happened:
+> ```bash
+> git status
+> git log --oneline --graph --all
+> ```
+> This habit helps you build a mental model of what Git is doing under the hood.
 
 ---
 
-## Passo 1: Inizializzare un Repository
+## Exercise Flow
 
-> ⚠️ Questa repo è già inizializzata, ma in un progetto nuovo useresti:
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
 
-### TODO: suggerire di usare la cartella repos al percorso .. e fare una cartella li dentro
+    Note over WD,GIT: Step 1 — git init (create repo + copy file)
+    Note over WD: 📄 progetto.txt → UNTRACKED
+
+    Note over WD,GIT: Step 2 — First add & commit
+    WD ->> SA: git add
+    SA ->> GIT: git commit
+
+    Note over WD,GIT: Step 3 — Modify & commit again
+    Note over WD: ✏️ MODIFIED
+    WD ->> SA: git add
+    SA ->> GIT: git commit
+
+    Note over WD,GIT: Step 4 — New file + modify & commit
+    Note over WD: ✏️ MODIFIED + 📄 UNTRACKED
+    WD ->> SA: git add *
+    SA ->> GIT: git commit
+
+    Note over WD,GIT: Step 5 — Navigate HEAD (checkout old commit & back)
+    GIT -->> WD: git checkout ‹hash›
+    GIT -->> WD: git checkout main
+:::
+
+---
+
+## Step 1: Initialize a Repository
+
+Navigate to the parent folder of this course repo and create a new project folder:
+
 ```bash
-# Creare una nuova cartella e inizializzarla
-mkdir mio-progetto
-cd mio-progetto
+cd ..
+mkdir repos
+cd repos
+mkdir my-project
+cd my-project
 git init
 ```
 
-**Cosa succede?**
-```mermaid
-flowchart TD
-    A["📁 Cartella vuota"] -->|"<b>git init</b>"| B["📦 Repository Git"]
-    B --> C["✅ .git/ creata"]
-    C --> D["🚀 Pronto!"]
-    
-    style A fill:#ECEFF1,stroke:#455A64,stroke-width:2px,color:#333
-    style B fill:#43A047,stroke:#1B5E20,stroke-width:3px,color:#fff
-    style C fill:#81C784,stroke:#388E3C,stroke-width:2px,color:#fff
-    style D fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle 0 stroke:#43A047,stroke-width:3px
-    linkStyle 1 stroke:#455A64,stroke-width:2px
-    linkStyle 2 stroke:#455A64,stroke-width:2px
+This creates a hidden `.git/` folder — your local repository. Open it with VS Code:
+
+```bash
+code .
 ```
 
----
+Run `git status` and `git log` to see the initial state. The log will be empty — there are no commits yet.
 
-## Passo 2: Controlla lo stato del repository
-
-Dall'interno della cartella mio-progetto:
-- Tasto destro + Open Git Bash here
-- Usare <git-status> per monitorare lo stato della repository
+Now copy the file `progetto.txt` (from `02-esercitazioni/01-basic-commands/`) into your `my-project` folder, then check the status:
 
 ```bash
 git status
 ```
 
-- Copiare il file `02-esercitazioni/progetto.txt` in `mio-progetto`
-- Usare <git-status> per monitorare lo stato della repository
+**Expected output**: you'll see `progetto.txt` listed as an **untracked** file.
 
-**Output atteso**: Vedrai `progetto.txt` come file non ancora trackato.
+Where are we in the Git areas? The file exists only in the Working Directory:
 
----
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
 
-## Passo 3: Esamina il file progetto.txt
-
-Apri il file `progetto.txt` in questa cartella. Contiene:
-
-```
-PROGETTO: Sistema di Gestione Ordini
-==========================================
-Stato: Versione iniziale
-Data creazione: [oggi]
-
-DESCRIZIONE
------------
-Questo file simula un progetto software.
-Ogni modifica rappresenta un'evoluzione del progetto.
-```
+    Note over WD: 📄 progetto.txt → UNTRACKED
+:::
 
 ---
 
-## Passo 4: Aggiungi il file alla Staging Area
+## Step 2: Stage and Commit
+
+Add the file to the Staging Area, then create the first commit:
 
 ```bash
 git add progetto.txt
 git status
 ```
 
-```mermaid
-flowchart LR
-    subgraph PRIMA[" PRIMA "]
-        A["📄 progetto.txt<br/><i>UNTRACKED</i>"]
-    end
-    
-    subgraph DOPO[" DOPO git add "]
-        B["✅ progetto.txt<br/><i>STAGED</i>"]
-    end
-    
-    A -->|"<b>git add</b>"| B
-    
-    style PRIMA fill:#FFEBEE,stroke:#C62828,stroke-width:2px
-    style DOPO fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px
-    style A fill:#EF5350,stroke:#C62828,stroke-width:2px,color:#fff
-    style B fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    
-    linkStyle 0 stroke:#43A047,stroke-width:3px
-```
-
----
-
-## Passo 5: Crea il primo commit
+You'll see the file is now listed under *Changes to be committed* — it's **STAGED**.
 
 ```bash
-git commit -m "feat: aggiunge progetto ordini - versione iniziale"
+git commit -m "feat: add order project - initial version"
+git status
+git log --oneline --graph --all
 ```
 
-```mermaid
-flowchart LR
-    subgraph SA[" STAGING AREA "]
-        S["✅ progetto.txt"]
-    end
-    
-    subgraph REPO[" REPOSITORY "]
-        R["💾 Commit abc123"]
-    end
-    
-    S -->|"<b>git commit</b>"| R
-    
-    style SA fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px
-    style REPO fill:#E3F2FD,stroke:#1565C2,stroke-width:2px
-    style S fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style R fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle 0 stroke:#1976D2,stroke-width:3px
-```
+The file has traveled across all three local areas:
+
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+
+    Note over WD: 📄 UNTRACKED
+    WD ->> SA: git add
+    Note over SA: ✅ STAGED
+    SA ->> GIT: git commit
+    Note over GIT: 💾 COMMITTED
+:::
 
 ---
 
-## Passo 6: Modifica il file
+## Step 3: Modify and Commit Again
 
-Apri `progetto.txt` e aggiungi questa sezione alla fine:
+Open `progetto.txt` and append this section at the end:
 
 ```
-FUNZIONALITÀ v1.0
+FEATURES v1.0
 -----------------
-[ ] Creazione ordine
-[ ] Lista ordini
-[ ] Dettaglio ordine
+[ ] Create order
+[ ] List orders
+[ ] Order detail
 ```
 
-Salva il file.
-
----
-
-## Passo 7: Controlla le modifiche
+Save the file, then check what changed:
 
 ```bash
 git status
 git diff
 ```
 
-**`git diff`** mostra le differenze tra il file attuale e l'ultimo commit:
+`git diff` shows the exact differences between the Working Directory and the last commit.
 
-```mermaid
-flowchart TD
-    A["💾 Ultimo Commit"] --> B["<code>git diff</code>"]
-    C["📂 Working Directory"] --> B
-    B --> D["📊 Mostra differenze"]
-    
-    style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style C fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
-    style B fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style D fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-```
-
----
-
-## Passo 8: Commit delle modifiche
+Now stage and commit:
 
 ```bash
 git add progetto.txt
-git commit -m "feat: aggiunge lista funzionalità v1.0"
+git commit -m "feat: add feature list v1.0"
+git log --oneline --graph --all
 ```
+
+**Expected output**:
+```
+a1b2c3d (HEAD -> main) feat: add feature list v1.0
+x9y8z7w feat: add order project - initial version
+```
+
+Notice **HEAD** — it's a pointer that tells you *where you are* in the commit history. Right now it points to the latest commit on `main`.
 
 ---
 
-## Passo 9: Visualizza la storia
+## Step 4: Another Modification + New File
 
-```bash
-git log
-git log --oneline
-```
-
-**Output atteso**:
-```
-a1b2c3d (HEAD -> main) feat: aggiunge lista funzionalità v1.0
-x9y8z7w feat: aggiunge progetto ordini - versione iniziale
-```
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '12px'}}}%%
-gitGraph
-    commit id: "🌱 init" tag: "v0.1"
-    commit id: "✨ features v1.0"
-```
-
----
-
-## Passo 10: Altra modifica + nuovo file
-
-Modifica `progetto.txt`, segna come completata la prima funzionalità:
+Edit `progetto.txt` — mark the first feature as completed:
 
 ```
-FUNZIONALITÀ v1.0
+FEATURES v1.0
 -----------------
-[x] Creazione ordine    <- COMPLETATO!
-[ ] Lista ordini
-[ ] Dettaglio ordine
+[x] Create order        <- DONE!
+[ ] List orders
+[ ] Order detail
 ```
 
-Aggiungi un file vuoto `note.txt`
+Also create a new empty file called `notes.txt`.
 
-Commit:
+Now stage **both files at once** and commit:
+
 ```bash
 git add *
-git commit -m "feat: implementa creazione ordine e aggiunta file con note"
+git commit -m "feat: implement create order + add notes file"
+git status
+git log --oneline --graph --all
 ```
 
+The cycle repeats — each modify/add/commit moves your changes through the areas:
+
+:::mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+
+    Note over WD: ✏️ MODIFIED + 📄 UNTRACKED
+    WD ->> SA: git add *
+    Note over SA: ✅ STAGED (both files)
+    SA ->> GIT: git commit
+    Note over GIT: 💾 COMMITTED
+    Note over WD,GIT: ✏️ Edit → MODIFIED | git add → STAGED | git commit → COMMITTED | cycle repeats ↩
+:::
+
 ---
 
-## Riepilogo Comandi
+## Step 5: Navigating History with HEAD
 
-| Comando | Descrizione |
+**HEAD** is Git's pointer to "where you are right now." Let's explore the history.
+
+View the full log:
+```bash
+git log --oneline --graph --all
+```
+
+You'll see something like:
+```
+c3d4e5f (HEAD -> main) feat: implement create order + add notes file
+a1b2c3d feat: add feature list v1.0
+x9y8z7w feat: add order project - initial version
+```
+
+Now let's travel back in time. Copy the hash of the first commit and run:
+
+```bash
+git checkout <first-commit-hash>
+```
+
+Open `progetto.txt` — the file is back to its original version! The features section doesn't exist yet.
+
+Check the log:
+```bash
+git log --oneline --graph --all
+```
+
+Notice that **HEAD** is no longer on `main` — you are in **detached HEAD** state. This means you're looking at an old snapshot, but you're not on any branch.
+
+To go back to the latest version:
+
+```bash
+git checkout main
+```
+
+`progetto.txt` is back to its latest state. HEAD points to `main` again.
+
+> ⚠️ **Detached HEAD** is read-only exploration. If you want to make changes from an old commit, you need to create a branch (we'll learn that next!).
+
+---
+
+## Command Summary
+
+| Command | Description |
 |---------|-------------|
-| `git init` | Inizializza un repository |
-| `git status` | Mostra lo stato dei file |
-| `git add <file>` | Aggiunge file alla staging area |
-| `git commit -m "msg"` | Crea un commit |
-| `git log` | Mostra la storia dei commit |
-| `git diff` | Mostra le differenze |
+| `git init` | Initialize a repository |
+| `git status` | Show the state of files |
+| `git add <file>` | Add files to the staging area |
+| `git add *` | Add all changed files |
+| `git commit -m "msg"` | Create a commit |
+| `git log --oneline --graph --all` | Show commit history |
+| `git diff` | Show differences vs last commit |
+| `git checkout <hash>` | Move HEAD to a specific commit |
+| `git checkout main` | Return HEAD to the main branch |
 
 ---
 
-## TODO Spostarsi tra un commit e l'altro e parlare di HEAD
+## Extra Exercise (Optional)
 
-## Esercizio Extra (Opzionale)
-
-1. Aggiungi un nuovo file `note.txt` con alcune note
-2. Fai un commit
-3. Modifica entrambi i file
-4. **Committa solo uno dei due**
-5. Verifica con `git status` cosa succede
+1. Add some text to `notes.txt` and commit
+2. Modify **both** `progetto.txt` and `notes.txt`
+3. Stage and commit **only one** of them
+4. Run `git status` — what state is each file in?
+5. Commit the remaining file
 
 ---
 
-## Prossimo Passo
+## Next Step
 
-➡️ Vai alla [esercitazione sui Branch](../02-branches/guida.md)
+➡️ Go to the [Branches exercise](../02-branches/guida.md)
