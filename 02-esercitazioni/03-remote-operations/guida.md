@@ -7,34 +7,6 @@ Imparare a lavorare con repository remoti: `remote`, `push`, `pull`, `fetch`, `c
 
 ---
 
-## Concetti Chiave
-
-```mermaid
-flowchart TB
-    subgraph REMOTE["☁️ REMOTE (Origin)"]
-        R[("🌐 GitHub/GitLab")]
-    end
-    
-    subgraph LOCAL["💻 LOCALE"]
-        L[("📦 Repository Locale")]
-    end
-    
-    L -->|"<b>git push</b> ↑"| R
-    R -->|"<b>git fetch</b> ↓"| L
-    R -->|"<b>git pull</b> ↓"| L
-    
-    style REMOTE fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px
-    style LOCAL fill:#E3F2FD,stroke:#1565C2,stroke-width:2px
-    style R fill:#FFB300,stroke:#FF6F00,stroke-width:3px,color:#fff
-    style L fill:#1976D2,stroke:#0D47A1,stroke-width:3px,color:#fff
-    
-    linkStyle 0 stroke:#43A047,stroke-width:3px
-    linkStyle 1 stroke:#8E24AA,stroke-width:2px
-    linkStyle 2 stroke:#1976D2,stroke-width:3px
-```
-
----
-
 ## Differenza tra Fetch, Pull e Push
 
 ```mermaid
@@ -45,16 +17,6 @@ flowchart LR
         C["<code>git pull</code>"] --> D["⬇️ Scarica <b>E</b> applica<br/>modifiche"]
         E["<code>git push</code>"] --> F["⬆️ Invia le tue<br/>modifiche"]
     end
-    
-    style COMMANDS fill:#FAFAFA,stroke:#78909C,stroke-width:2px
-    style A fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style B fill:#E1BEE7,stroke:#7B1FA2,stroke-width:2px,color:#333
-    style C fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style D fill:#BBDEFB,stroke:#1565C2,stroke-width:2px,color:#333
-    style E fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style F fill:#C8E6C9,stroke:#388E3C,stroke-width:2px,color:#333
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
 ```
 
 | Comando | Cosa fa | Quando usarlo |
@@ -67,332 +29,68 @@ flowchart LR
 
 ## Flusso Esercitazione
 
-## TODO Prima va scaricata, prima si spiega il clone
+### 01 Clonare il repository online
 
-```mermaid
-flowchart TD
-    A["<b>1</b><br/>Verifica remote"] --> B["<b>2</b><br/>Simula lavoro locale"]
-    B --> C["<b>3</b><br/>Push modifiche"]
-    C --> D["<b>4</b><br/>Simula modifiche remote"]
-    D --> E["<b>5</b><br/>Fetch e Pull"]
-    
-    style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style B fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style C fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style D fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
-    style E fill:#1565C2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-```
+1. Aprire Azure DevOps Repos, selezionare il repo e cliccare su Clone.
 
----
+![CloneAzureDevOps](/images/CloneAzureDevOps.png)
 
-## Passo 1: Verifica il remote configurato
+2. Se si vuole usare Visual Studio Cose cliccare su "Clone in VS Code", altrimenti copiare il path.
+3. Aprire una cartella nel proprio pc (si consiglia `<User>/source/repos`), aprire Git Bash e fare `git clone <url>`.
+4. Verrà chiesto di autenticarsi ad Azure Entra ID.
+5. Una volta fatto, ci dovrebbe essere una nuova cartella con dentro il contenuto clonato.
 
-```bash
-cd 02-esercitazioni/03-remote-operations
-git remote -v
-```
+![CloneAzureDevOps2](/images/CloneAzureDevOps2.png)
 
-**Output atteso** (se c'è un remote):
-```
-origin  https://github.com/user/repo.git (fetch)
-origin  https://github.com/user/repo.git (push)
-```
 
----
+#### Cosa fare quando l'autenticazione di Entra ID non è supportata
 
-## Passo 2: Esamina il file collaborazione.txt
+1. E' possibile creare un token di accesso in fase di clonazione.
+2. Su Azure DevOps, generare delle Git Credentials e copiarsele.
+3. L'url del clone da usare non è più `https://beantech@dev.azure.com/etcetc`
+4. Ma diventa `git clone https://<user>:<token>@dev.azure.com/etcetc`
 
-```
-PROGETTO: Documentazione Condivisa
-==================================
-Repository: GitCourse
-Branch: main
+#### Che licenza serve per usare Azure DevOps Repos
+1. Licenza Azure DevOps Basic Plan (circa 6€/mese)
+1. Licenza Visual Studio
 
-COLLABORATORI
--------------
-- Tu (locale)
-- Team (remoto)
+#### Security dei repository Azure DevOps
+La gestione della security permette di gestire i permessi delle persone.
+https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops
 
-STATO SYNC
-----------
-Ultimo push: [mai]
-Ultimo pull: [mai]
-```
+### 02 Aggiungere un file e comparare il repo locale con quello online
+1. Aggiungere un file qualsiasi all'interno della cartella clonata
+2. `git add .` e `git commit -m "Aggiunto file"`
+3. Eseguire `git log` e notare che il repo locale è più avanti rispetto al repo remoto
+
+### 03 Pubblicare
+1. Fare `git push` per caricare online il lavoro fatto
+2. Eseguire `git log` per notare che, ora, repo locale e repo remoto sono allineati
+
+#### Policy dei repository Azure DevOps
+La gestione delle policy permette di gestire le regole di uso dei branch (es. "non è possibile fare push su main").
+https://learn.microsoft.com/en-us/azure/devops/repos/git/repository-settings?view=azure-devops&tabs=browser
+
+### 04 Scaricare
+1. Per prima cosa simuliamo un collega che pubblica un altro lavoro parallelamente al nostro.
+2. Andare su Azure DevOps Repos, premere sui tre puntini a destra e fare "Upload File". Verrà chiesto di fare un commit nuovo direttamente online.
+3. Andare ora sul proprio repo locale e fare `git fetch` e `git log`: si dovrebbe notare che il repo online è più avanti rispetto a quello locale.
+4. Fare ora `git pull` per applicare effettivamente le modifiche (notarlo facendo nuovamente `git log`).
 
 ---
 
-## Passo 3: Modifica locale
-
-Modifica `collaborazione.txt`:
-
-```
-PROGETTO: Documentazione Condivisa
-==================================
-Repository: GitCourse
-Branch: main
-
-COLLABORATORI
--------------
-- Tu (locale)
-- Team (remoto)
-
-STATO SYNC
-----------
-Ultimo push: [oggi - in attesa]
-Ultimo pull: [mai]
-
-MODIFICHE LOCALI
-----------------
-[2026-02-10] Aggiunta sezione modifiche
-```
-
-Commit:
-```bash
-git add collaborazione.txt
-git commit -m "docs: aggiunge sezione modifiche locali"
-```
-
----
-
-## Passo 4: Visualizza commit da pushare
-
-```bash
-git log origin/main..HEAD --oneline
-```
-
-Questo mostra i commit locali non ancora pushati.
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#C8E6C9', 'commitLabelFontSize': '11px'}}}%%
-gitGraph
-    commit id: "🌐 origin/main"
-    commit id: "⭐ local-1" type: HIGHLIGHT
-    commit id: "⭐ local-2" type: HIGHLIGHT
-```
-
----
-
-## Passo 5: Push delle modifiche
-
-```bash
-git push origin main
-# oppure semplicemente
-git push
-```
-
-```mermaid
-%%{init: {'theme': 'base', 'sequence': {'actorFontWeight': 'bold', 'noteFontSize': '12px'}, 'themeVariables': { 'actorBkg': '#1976D2', 'actorTextColor': '#fff', 'actorBorder': '#0D47A1', 'signalColor': '#455A64', 'noteBkgColor': '#E8F5E9', 'noteBorderColor': '#43A047'}}}%%
-sequenceDiagram
-    participant L as 💻 Locale
-    participant R as ☁️ Remote
-    
-    L->>R: git push ↑
-    R-->>L: ✅ Modifiche ricevute
-    Note over R: origin/main aggiornato
-```
-
-> ⚠️ Se non hai un remote configurato, il push fallirà. Questo è normale per l'esercitazione!
-
----
-
-## Passo 6: Simulare modifiche remote
-
-In un lavoro reale, altri sviluppatori fanno push. Simuliamo questo scenario:
-
-**Scenario**: Un collega ha modificato lo stesso file sul remote.
-
-```mermaid
-%%{init: {'theme': 'base', 'sequence': {'actorFontWeight': 'bold', 'noteFontSize': '11px'}, 'themeVariables': { 'actorBkg': '#1976D2', 'actorTextColor': '#fff', 'actorBorder': '#0D47A1', 'signalColor': '#455A64', 'noteBkgColor': '#FFF8E1', 'noteBorderColor': '#FF8F00'}}}%%
-sequenceDiagram
-    participant You as 👤 Tu
-    participant Remote as ☁️ origin
-    participant Colleague as 👥 Collega
-    
-    You->>Remote: push (commit A) ↑
-    Colleague->>Remote: push (commit B) ↑
-    Note over You: ⚠️ Il tuo locale è indietro!
-    You->>Remote: fetch ↓
-    Note over You: 👁️ Vedi commit B
-    You->>You: pull (applica B)
-```
-
----
-
-## Passo 7: Fetch vs Pull
-
-### Fetch (solo scarica)
-```bash
-git fetch origin
-git log origin/main --oneline
-```
-
-`fetch` scarica le modifiche ma **non le applica** al tuo branch.
-
-### Pull (scarica e applica)
-```bash
-git pull origin main
-# oppure
-git pull
-```
-
-```mermaid
-flowchart TD
-    A["<code>git fetch</code>"] --> B["⬇️ Scarica in origin/main"]
-    B --> C{{"🤔 Vuoi applicare?"}}
-    C -->|"Sì"| D["<code>git merge origin/main</code>"]
-    C -->|"<code>git pull</code>"| D
-    
-    style A fill:#8E24AA,stroke:#4A148C,stroke-width:2px,color:#fff
-    style B fill:#E1BEE7,stroke:#7B1FA2,stroke-width:2px,color:#333
-    style C fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px,color:#333
-    style D fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-```
-
----
-
-## Passo 8: Pull con conflitti
-
-Se tu e un collega modificate la stessa riga:
-
-```mermaid
-flowchart TD
-    A["<code>git pull</code>"] --> B{{"Conflitto?"}}
-    B -->|"No"| C["✅ Merge automatico"]
-    B -->|"Sì"| D["⚠️ Risolvi manualmente"]
-    D --> E["<code>git add</code> file"]
-    E --> F["<code>git commit</code>"]
-    
-    style A fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style B fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px,color:#333
-    style C fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style D fill:#EF5350,stroke:#C62828,stroke-width:2px,color:#fff
-    style E fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
-    style F fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-```
-
-**Esempio di conflitto nel file**:
-```
-<<<<<<< HEAD
-La tua versione
-=======
-La versione remota
->>>>>>> origin/main
-```
-
----
-
-## Passo 9: Workflow tipico
-
-```mermaid
-flowchart TD
-    A["🌅 Inizio giornata"] --> B["<code>git pull</code>"]
-    B --> C["💻 Lavora sui file"]
-    C --> D["<code>git add + commit</code>"]
-    D --> E{{"Altri commit remoti?"}}
-    E -->|"Sì"| F["<code>git pull</code>"]
-    F --> G{{"Conflitti?"}}
-    G -->|"Sì"| H["⚠️ Risolvi"]
-    H --> D
-    G -->|"No"| I["<code>git push</code>"]
-    E -->|"No"| I
-    
-    style A fill:#78909C,stroke:#455A64,stroke-width:2px,color:#fff
-    style B fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style C fill:#F57C00,stroke:#E65100,stroke-width:2px,color:#fff
-    style D fill:#FFB300,stroke:#FF6F00,stroke-width:2px,color:#fff
-    style E fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px,color:#333
-    style F fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    style G fill:#FFEBEE,stroke:#C62828,stroke-width:2px,color:#333
-    style H fill:#EF5350,stroke:#C62828,stroke-width:2px,color:#fff
-    style I fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    
-    linkStyle default stroke:#455A64,stroke-width:2px
-```
-
----
-
-## Comandi Utili
-
-```bash
-# Vedere lo stato rispetto al remote
-git status
-
-# Vedere branch remoti
-git branch -r
-
-# Vedere tutti i branch (locali + remoti)
-git branch -a
-
-# Vedere log con riferimenti remoti
-git log --oneline --graph --all
-```
-
----
-
-## Riepilogo Comandi
+## Riassunto e altri comandi
+Un progetto locale può essere collegato a uno **o più** repository remoti (es. Azure DevOps Repos). Un remoto è semplicemente una cartella *.git* diversa da quella locale.
 
 | Comando | Descrizione |
-|---------|-------------|
-| `git remote -v` | Mostra remote configurati |
-| `git remote add <nome> <url>` | Aggiunge un remote |
-| `git fetch` | Scarica modifiche (no merge) |
-| `git pull` | Scarica e applica modifiche |
-| `git push` | Invia modifiche al remote |
-| `git clone <url>` | Clona un repository |
+| ------- | ----------- |
+| `git clone <url>` | Clonare un repo online. Url `https://beantech@dev.azure.com/etc` oppure `https://<user>:<token>@dev.azure.com/etc.` |
+| `git remote add <remotename> <url>` | Collegarsi la prima volta ad un progetto, a partire da un repo locale già esistente. Solitamente si usa `origin` come nome (**non è una regola**, è una convenzione). Nota: è possibile essere collegati a più remote contemporaneamente. |
+| `git fetch <remotename>`            | Scaricare i commit di un remote. Scaricarli **non** significa applicarli ai propri branch locali.                          |
+| `git pull <remotenane> <branch>`    | Applicare, ad un branch locale, le modifiche appena scaricate. `pull` senza fare prima `fetch` è inutile.                  |
+| `git push <remotename> <branch>`    | Pubblica sul remote i nuovi commit del branch locale.                                                                      |
+| `git remote remove <remotename>`    | Rimuovi un remote.                                                                                                         |
+| `git remote -v`                     | Listare tutti i remote.                                                                                                    |
+| `git remote show <remotename>`      | Guardare lo stato di un remote.                                                                                            |
 
----
-
-## Schema Riassuntivo Finale
-
-```mermaid
-flowchart TB
-    subgraph REMOTE_BOX["☁️ REMOTE REPOSITORY"]
-        R[("🌐 origin")]
-    end
-    
-    subgraph LOCAL_BOX["💾 LOCAL REPOSITORY"]
-        L[("📦 commits")]
-    end
-    
-    subgraph WORK_BOX["📂 WORKING DIRECTORY"]
-        W["📝 Files"]
-    end
-    
-    R -->|"<b>fetch</b>"| L
-    R -->|"<b>pull</b>"| W
-    L -->|"<b>push</b>"| R
-    W -->|"<b>add + commit</b>"| L
-    
-    style REMOTE_BOX fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px
-    style LOCAL_BOX fill:#E3F2FD,stroke:#1565C2,stroke-width:2px
-    style WORK_BOX fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px
-    style R fill:#FFB300,stroke:#FF6F00,stroke-width:3px,color:#fff
-    style L fill:#1976D2,stroke:#0D47A1,stroke-width:3px,color:#fff
-    style W fill:#43A047,stroke:#1B5E20,stroke-width:3px,color:#fff
-    
-    linkStyle 0 stroke:#8E24AA,stroke-width:2px
-    linkStyle 1 stroke:#1976D2,stroke-width:3px
-    linkStyle 2 stroke:#43A047,stroke-width:3px
-    linkStyle 3 stroke:#F57C00,stroke-width:2px
-```
-
----
-
-## Fine Sessione 1!
-
-Complimenti! Hai completato la prima sessione del corso Git.
-
-### Cosa hai imparato:
-- ✅ Cos'è un VCS e perché usare Git
-- ✅ Comandi base: init, add, commit, status, log
-- ✅ Branching: branch, checkout, merge
-- ✅ Remote operations: push, pull, fetch
-
-### Prossima sessione:
-- Git Avanzato (rebase, cherry-pick, stash, tags)
+> 📌 Si consiglia di fare `fetch` e `pull` **ogni volta** che si inizia a fare un nuovo lavoro oppure quando si è in procinto di caricare commit online, in modo da essere **sempre allineati** con l'ultima versione pubblicata.
