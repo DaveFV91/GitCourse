@@ -54,9 +54,12 @@ sequenceDiagram
     WD ->> SA: git add
     SA ->> GIT: git commit (on feature/login)
 
-    Note over WD,GIT: Step 4 — Switch back to main
+    Note over WD,GIT: Step 4 — Switch back to main & add new commit
     GIT -->> WD: git checkout main
     Note over WD: 📄 feature.txt → original version
+    Note over WD: 📄 config.txt → NEW FILE
+    WD ->> SA: git add config.txt
+    SA ->> GIT: git commit (on main)
 
     Note over WD,GIT: Step 5 — Merge feature/login into main
     GIT -->> GIT: git merge feature/login
@@ -80,7 +83,7 @@ git branch
 * main
 ```
 
-The asterisk marks the current branch.
+The "*" marks the current branch.
 
 ```bash
 git log --oneline --graph --all
@@ -183,7 +186,7 @@ sequenceDiagram
 
 ---
 
-## Step 4: Switch Back to Main
+## Step 4: Switch Back to Main and Add a New Commit
 
 ```bash
 git checkout main
@@ -197,27 +200,55 @@ git switch main
 git log --oneline --graph --all
 ```
 
-```mermaid
-flowchart LR
-    subgraph FEATURE[" 🌿 feature/login "]
-        F["📄 feature.txt<br/><b>modified</b>"]
-    end
-    
-    subgraph MAIN[" 🔵 main "]
-        M["📄 feature.txt<br/><b>original</b>"]
-    end
-    
-    F -.->|"<code>checkout main</code>"| M
-    
-    style FEATURE fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px
-    style MAIN fill:#E3F2FD,stroke:#1565C2,stroke-width:2px
-    style F fill:#43A047,stroke:#1B5E20,stroke-width:2px,color:#fff
-    style M fill:#1976D2,stroke:#0D47A1,stroke-width:2px,color:#fff
-    
-    linkStyle 0 stroke:#78909C,stroke-width:2px,stroke-dasharray:5
+Now let's add a commit on `main` **without affecting** the `feature/login` branch. We'll create a **new file** called `config.txt`:
+
+```
+APP CONFIG
+==============================
+Version: 1.2.0
+Environment: development
+
+Database Configuration
+-----------------------
+HOST=localhost
+PORT=5432
+NAME=app_db
+
+Logging
+---------
+LEVEL=DEBUG
+FORMAT=json
+
+Feature Flags
+-----------
+AUTH_ENABLED=true
+CACHE_ENABLED=true
 ```
 
-> 💡 This is the power of branches: isolated changes. Each branch has its own version of the files.
+Stage and commit:
+
+```bash
+git add config.txt
+git commit -m "chore: add application configuration file"
+git status
+git log --oneline --graph --all
+```
+
+**Key observation**: Now both `main` and `feature/login` have **different commits** after the common base. This is a **diverged history**, but there are **no conflicting changes** — we modified different files!
+
+```mermaid
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main', 'showCommitLabel': true}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
+gitGraph
+    commit id: "commit-1"
+    commit id: "..."
+    commit id: "📄 feature.txt"
+    branch feature/login
+    commit id: "🔐 feature.txt"
+    checkout main
+    commit id: "⚙️ config.txt"
+```
+
+> 💡 This is the power of branches: isolated changes. Each branch can develop independently **without conflicts** as long as they modify different files. When you merge, Git will automatically combine both changes.
 
 ---
 
@@ -226,7 +257,7 @@ flowchart LR
 Merge the changes from `feature/login` into `main`:
 
 ```bash
-git merge feature/login
+git merge --no-edit feature/login
 ```
 
 ```mermaid
@@ -238,17 +269,17 @@ gitGraph
     branch feature/login
     commit id: "🔐 login"
     checkout main
-    merge feature/login id: "🔀 MERGE" type: HIGHLIGHT
+    commit id: "⚙️ config.txt"
+    merge feature/login id: "🔀 MERGE commit" 
 ```
 
 Verify the result:
 
 ```bash
 git log --oneline --graph --all
-cat feature.txt
 ```
 
-The file now contains all the changes made on the `feature/login` branch. **The merge brought them into `main`.**
+The main branch now contains all the changes made on the `feature/login` branch. **The merge brought them into `main`.**
 
 ---
 
@@ -274,11 +305,11 @@ The commits remain in the history — only the branch label is removed.
 | `git checkout <branch>` | Switch to a branch |
 | `git switch <branch>` | Switch to a branch (modern) |
 | `git checkout -b <name>` | Create and switch to a branch |
-| `git merge <branch>` | Merge a branch into current |
+| `git merge --no-edit <branch>` | Merge a branch into current |
 | `git branch -d <name>` | Delete a branch |
 
 ---
 
 ## Next Step
 
-➡️ Go to the [Remote Operations exercise](../03-remote-operations/guida.md)
+➡️ Go to the [Remote Operations exercise](../03-remote-operations/remote-walkthrough.md)

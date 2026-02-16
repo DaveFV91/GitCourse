@@ -5,8 +5,8 @@ Learn the fundamental Git commands: `init`, `status`, `add`, `commit`, `log`, `d
 
 > 💡 **Tip**: After every meaningful change, run these two commands to observe what happened:
 > ```bash
-> git status
-> git log --oneline --graph --all
+> git status # display the state of the working directory and the staging area 
+> git log --oneline --graph --all # display commit history
 > ```
 > This habit helps you build a mental model of what Git is doing under the hood.
 
@@ -155,6 +155,19 @@ x9y8z7w feat: add order project - initial version
 
 Notice **HEAD** — it's a pointer that tells you *where you are* in the commit history. Right now it points to the latest commit on `main`.
 
+```mermaid
+sequenceDiagram
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+    participant GIT as 📦 .git
+
+    Note over WD: ✏️ MODIFIED
+    WD ->> SA: git add
+    Note over SA: ✅ STAGED
+    SA ->> GIT: git commit
+    Note over GIT: 💾 COMMITTED
+```
+
 ---
 
 ## Step 4: Navigating History with HEAD
@@ -195,7 +208,7 @@ git checkout main
 
 `project.txt` is back to its latest state. HEAD points to `main` again.
 
-> ⚠️ **Detached HEAD** is read-only exploration. If you want to make changes from an old commit, you need to create a branch (we'll learn that next!).
+> ⚠️ **Detached HEAD** is read-only exploration. If you want to make changes from an old commit, you should create a branch (we'll learn that next!).
 
 ---
 
@@ -252,7 +265,7 @@ sequenceDiagram
 Let's simulate a worse scenario — committing the credentials file:
 
 ```bash
-git add credentials.txt
+git add credentials.txt # (modify + stage)
 git commit -m "add credentials"
 git log --oneline --graph --all
 ```
@@ -265,11 +278,24 @@ git commit -m "fix: remove credentials"
 git log --oneline --graph --all
 ```
 
+> 💡Quick note:
+> ```bash
+> # alternative: manually remove credentials.txt and then --> git add credentials.txt
+> rm credentials.txt # delete the file locally (file is in "modified" state)
+> git add credentials.txt
+> git commit -m "fix: remove credentials"
+> ```
+
 The file is gone from the Working Directory. Problem solved? **Not at all.** Let's check:
 
 ```bash
 git show HEAD~1:credentials.txt
 ```
+
+> 💡Alternative:
+> ```bash
+> git show <second-last-commit-hash>:credentials.txt
+> ```
 
 **Your passwords are still in the Git history!** Anyone who clones this repository can see them. A new commit that deletes a file does NOT erase old commits — Git remembers everything.
 
@@ -348,7 +374,7 @@ git status
 
 ## Extra Exercise (Optional): Your First Day at Work 💼
 
-It's your first day as a developer at a startup. Your team lead gives you a series of tasks. You need to figure out the right Git commands on your own. Solutions are in a separate file.
+It's your first day as a developer at a startup. Your team lead gives you a series of tasks. You need to figure out the right Git commands on your own.
 
 > 💡 Use `git status` and `git log --oneline --graph --all` after every task to verify.
 
@@ -395,8 +421,6 @@ REDIS_URL=redis://:hunter2@cache.internal:6379
 4. You run `git add .` out of habit. Before committing, you realize `db-config.env` should NOT be tracked. Fix it — but keep it on disk.
 
 5. Your lead says: *"Make sure this can never happen again."* Set up the project so that `*.env` files are always ignored by Git. Commit your solution.
-
-6. A new intern on the team runs `git add -f db-config.env` and commits. The lead asks you: *"Can `.gitignore` prevent a `git add -f`?"* What's the answer?
 
 ---
 
@@ -445,75 +469,66 @@ A junior developer made a mess. Simulate it:
 
 ## Next Step
 
-➡️ Go to the [Branches exercise](../02-branches/guida.md)
+➡️ Go to the [Branches exercise](../02-branches/branches-walkthrough.md)
 
 ---
 
-## Approfondimenti — Alternative a `git reset --hard HEAD~2`
+## Deep Dive — Alternatives to `git reset --hard HEAD~2`
 
-Qui trovi alcune alternative comuni a `git reset --hard HEAD~2`, con una breve indicazione quando usarle.
+Below you'll find some common alternatives to `git reset --hard HEAD~2`, with a brief note on when to use each.
 
 - `git reset --hard <commit>`
     ```bash
     git reset --hard HEAD~2
-    # oppure usare l'hash del commit
+    # or use the commit hash
     git reset --hard a1b2c3d
     ```
-    Uso: cancella localmente gli ultimi commit e scarta ogni modifica (distruttivo).
+    Use: locally deletes the last commits and discards all changes (destructive).
 
 - `git reset --mixed HEAD~2`
     ```bash
     git reset --mixed HEAD~2
     ```
-    Uso: sposta HEAD indietro di 2 commit ma lascia le modifiche nel working tree (non staged).
+    Use: moves HEAD back by 2 commits but leaves changes in the working tree (unstaged).
 
 - `git reset --soft HEAD~2`
     ```bash
     git reset --soft HEAD~2
     ```
-    Uso: sposta HEAD indietro ma mantiene i cambi come staged (utile per ricombinare commit o cambiare messaggi).
+    Use: moves HEAD back but keeps changes as staged (useful for combining commits or rewriting messages).
 
 - `git revert --no-commit HEAD~2..HEAD && git commit -m "Revert last 2 commits"`
     ```bash
     git revert --no-commit HEAD~2..HEAD
     git commit -m "Revert last 2 commits"
     ```
-    Uso: annulla gli ultimi commit creando nuovi commit di revert — sicuro su repository già pushati.
+    Use: cancels the last commits by creating new revert commits — safe on repositories already pushed.
 
-- Interactive rebase (modifica o rimuovi singoli commit)
+- Interactive rebase (modify or remove individual commits)
     ```bash
     git rebase -i HEAD~3
-    # nell'editor: usare `drop` o rimuovere le righe dei commit da eliminare
+    # in the editor: use `drop` or remove the lines of commits to delete
     ```
-    Uso: pulire o riorganizzare commit locali prima del push; riscrive la storia.
+    Use: clean up or reorganize local commits before pushing; rewrites history.
 
 - `git reflog` + `git reset --hard <ref>`
     ```bash
     git reflog
     git reset --hard HEAD@{3}
     ```
-    Uso: trovare uno stato precedente ed eventualmente tornarci (utile per recuperi).
+    Use: find a previous state and optionally return to it (useful for recovery).
 
-- Rimuovere file sensibili dalla storia (strumenti dedicati)
+- Remove sensitive files from history (dedicated tools)
     ```bash
-    # esempio con git-filter-repo (consigliato rispetto a filter-branch)
+    # example with git-filter-repo (recommended over filter-branch)
     git filter-repo --path credentials.txt --invert-paths
     git push --force
     ```
-    Uso: rimuovere file/segreti da tutta la storia; richiede force-push e coordinamento col team.
+    Use: remove files/secrets from entire history; requires force-push and team coordination.
 
-Nota di utilità:
+---
 
-```bash
-# alternative: manually remove credentials.txt and then --> git add credentials.txt
-# (se preferisci rimuovere manualmente il file e poi aggiungerne una versione pulita)
-rm credentials.txt
-# modificare il file localmente
-git add credentials.txt
-git commit -m "chore: update credentials (clean)"
-```
-
-Avvertenze rapide:
-- `reset --hard` e `rebase` riscrivono la storia: non usarli su commit già condivisi senza coordinazione (potrebbe essere necessario `git push --force`).
-- Se i commit problematici sono già su un remoto pubblico, preferisci `git revert` o coordina un force-push con il team.
+Quick warnings:
+- `reset --hard` and `rebase` rewrite history: don't use them on commits already shared without coordination (may require `git push --force`).
+- If problem commits are already on a public remote, prefer `git revert` or coordinate a force-push with your team.
 
