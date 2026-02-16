@@ -1,0 +1,25 @@
+APP: Authentication System
+==============================
+Branch: main
+Version: 1.0.0
+
+ACTIVE MODULES
+-------------
+[x] Base configuration
+[ ] User login
+[ ] Registration
+[ ] Password reset
+
+==============================
+INSTRUCTIONS
+==============================
+This file is used to learn about Git branches.
+
+When you create a branch and modify this file,
+the changes remain isolated in that branch.
+
+When you switch back to 'main', you'll see the original version.
+After the merge, the changes will be combined!
+
+Follow the walkthrough for complete instructions.
+==============================

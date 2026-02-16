@@ -1,0 +1,13 @@
+PROJECT: Order Management System
+==========================================
+Status: Initial version
+Created: February 2026
+
+DESCRIPTION
+-----------
+This file simulates a software project.
+Each change represents an evolution of the project.
+
+==========================================
+INSTRUCTIONS: Follow the walkthrough for the changes to make!
+==========================================
