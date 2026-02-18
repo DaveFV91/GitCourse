@@ -223,7 +223,7 @@ Create a file called `credentials.txt` with fake credentials:
 ```
 DB_HOST=localhost
 DB_USER=admin
-DB_PASSWORD=super_secret_123
+DB_PASSWORD=ChiMeLhaFattoFare
 API_KEY=sk-abc123def456ghi789
 ```
 
