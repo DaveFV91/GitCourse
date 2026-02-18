@@ -25,19 +25,19 @@ You should see multiple commits on `main` and two branches: `feature/reports` an
 ```mermaid
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
 gitGraph
-    commit id: "feat: initial\napplication structure"
-    commit id: "feat: implement\nlogin form"
-    commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard"
+    commit id: "feat: initial application structure"
+    commit id: "feat: implement login form"
+    commit id: "chore: add application config file"
+    commit id: "feat: add dashboard"
     branch feature/reports
     commit id: "add reports stub"
     commit id: "WIP reports page"
     commit id: "forgot semicolon"
     commit id: "fix tests again"
     checkout main
-    commit id: "feat: add reports\npage to main"
+    commit id: "feat: add reports page to main"
     branch feature/export
-    commit id: "feat: add\nexport module"
+    commit id: "feat: add export module"
 ```
 
 ---
@@ -195,6 +195,8 @@ git stash pop
 
 **Expected output**: `app.txt` is **modified** again — your changes are back exactly where you left them.
 
+Commit
+
 ```mermaid
 %%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFE0E0', 'commitLabelFontSize': '10px'}}}%%
 gitGraph
@@ -223,10 +225,13 @@ gitGraph
 
 ---
 
-Delete the hotfix branch (it's no longer needed):
+Clean up:
+- Delete the hotfix branch (it's no longer needed)
+- Remove changes to `app.txt` to clean the staging area
 
 ```bash
 git branch -d hotfix/critical-bug
+git restore app.txt
 ```
 
 ## Step 3: Squash Messy Commits
@@ -288,30 +293,20 @@ git log --oneline --graph --all
 **Expected output**: the four commits have collapsed into one single clean commit.
 
 ```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#FF6B6B', 'git3': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#C8E6C9', 'commitLabelFontSize': '10px'}}}%%
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#C8E6C9', 'commitLabelFontSize': '10px'}}}%%
 gitGraph
     commit id: "feat: initial\napplication structure"
     commit id: "feat: implement\nlogin form"
     commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard"
+    commit id: "feat: add\ndashboard" tag: "v1.0.0"
     branch feature/reports
-    commit id: "add reports stub"
-    commit id: "WIP reports page"
-    commit id: "forgot semicolon"
-    commit id: "fix tests again"
+    commit id: "feat(reports): implement\nreports page with tests" type: HIGHLIGHT
     checkout main
-    commit id: "feat: add reports\npage to main"
-    branch hotfix/critical-bug
-    commit id: "fix: bump\nversion to 1.1.1"
-    checkout main
-    merge hotfix/critical-bug id: "merge hotfix"
-    commit id: "(stash pop)\napp.txt changes"
-    checkout feature/reports
-    reset HEAD~3
-    commit id: "feat(reports): implement\nreports page with tests"
-    checkout main
+    commit id: "feat: add reports\npage to main" tag: "v1.1.0-dev"
     branch feature/export
     commit id: "feat: add\nexport module"
+    checkout main
+    commit id: "fix: bump\nversion to 1.1.1"
 ```
 
 > ⚠️ `git rebase -i` rewrites history. Only squash commits that have **not been pushed** to a shared remote.
@@ -357,33 +352,6 @@ git log --oneline
 ```
 
 **The commits are back.** 🎉
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#FF6B6B', 'git3': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFE0E0', 'commitLabelFontSize': '10px'}}}%%
-gitGraph
-    commit id: "feat: initial\napplication structure"
-    commit id: "feat: implement\nlogin form"
-    commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard"
-    branch feature/reports
-    commit id: "add reports stub"
-    commit id: "WIP reports page"
-    commit id: "forgot semicolon"
-    commit id: "fix tests again"
-    checkout main
-    commit id: "feat: add reports\npage to main"
-    branch hotfix/critical-bug
-    commit id: "fix: bump\nversion to 1.1.1"
-    checkout main
-    merge hotfix/critical-bug id: "merge hotfix"
-    commit id: "(stash pop)\napp.txt changes"
-    branch feature/export
-    commit id: "feat: add\nexport module"
-    checkout main
-    commit id: "chore: set environment\nto production"
-    reset HEAD~2
-    commit id: "✅ git reset --hard\nHEAD@{1} RESTORED"
-```
 
 > 💡 `git reflog` also works for recovering deleted branches. If you delete a branch by mistake, find its last commit in the reflog and create a new branch pointing to it: `git checkout -b recovered-branch <hash>`
 
@@ -469,34 +437,23 @@ git log --oneline --graph --all
 **Expected output**: a new merge commit ties the two branches together.
 
 ```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#FF6B6B', 'git3': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '10px'}}}%%
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '10px'}}}%%
 gitGraph
     commit id: "feat: initial\napplication structure"
     commit id: "feat: implement\nlogin form"
     commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard"
+    commit id: "feat: add\ndashboard" tag: "v1.0.0"
     branch feature/reports
-    commit id: "add reports stub"
-    commit id: "WIP reports page"
-    commit id: "forgot semicolon"
-    commit id: "fix tests again"
+    commit id: "feat(reports): implement\nreports page with tests"
     checkout main
-    commit id: "feat: add reports\npage to main"
-    branch hotfix/critical-bug
-    commit id: "fix: bump\nversion to 1.1.1"
-    checkout main
-    merge hotfix/critical-bug id: "merge hotfix"
-    commit id: "(stash pop)\napp.txt changes"
+    commit id: "feat: add reports\npage to main" tag: "v1.1.0-dev"
     branch feature/export
     commit id: "feat: add\nexport module"
     commit id: "ENVIRONMENT=staging"
     checkout main
-    checkout feature/reports
-    reset HEAD~3
-    commit id: "feat(reports): implement\nreports page with tests"
-    checkout main
+    commit id: "fix: bump\nversion to 1.1.1"
     commit id: "ENVIRONMENT=production"
-    merge feature/export id: "✅ resolved merge"
+    merge feature/export id: "✅ resolved merge" type: HIGHLIGHT
 ```
 
 > 💡 If the conflict is too complex and you want to start over: `git merge --abort`. This restores the repository to the state before the merge attempt.
