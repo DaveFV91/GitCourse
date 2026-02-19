@@ -7,6 +7,7 @@ This module covers advanced Git techniques used daily in professional workflows:
 - 📦 **Stash** — temporarily shelve uncommitted work
 - 🗜️ **Squash** — collapse multiple commits into one
 - 🔍 **Reflog** — the safety net for lost commits
+---
 - ⚔️ **Conflict resolution** — handle divergent changes on the same file
 - 🔀 **Merge vs Rebase vs Cherry-pick** — three strategies to integrate changes
 

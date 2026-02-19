@@ -310,10 +310,10 @@ gitGraph
     commit id: "feat: add login"
     commit id: "feat: add dashboard" tag: "v1.0.0"
     branch release/v1.0
-    commit id: "fix: critical null pointer in auth 🍒"
+    commit id: "fix: critical null pointer in auth 🍒" type: HIGHLIGHT
     checkout main
     commit id: "feat: add search"
-    commit id: "fix: critical null pointer in auth"
+    commit id: "fix: critical null pointer in auth" type: HIGHLIGHT
     commit id: "feat: add analytics"
 ```
 
