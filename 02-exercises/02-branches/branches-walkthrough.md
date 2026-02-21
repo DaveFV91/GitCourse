@@ -1,9 +1,11 @@
 # Exercise 2: Git Branches
 
 ## Goal
+
 Learn to create, navigate, and merge branches: `branch`, `checkout`, `switch`, `merge`.
 
 > 💡 **Tip**: After every meaningful change, run:
+> 
 > ```bash
 > git status
 > git log --oneline --graph --all
@@ -14,6 +16,7 @@ Learn to create, navigate, and merge branches: `branch`, `checkout`, `switch`, `
 ## What is a Branch?
 
 A **branch** is an independent line of development. It lets you:
+
 - Work on features without touching the main codebase
 - Experiment without risk
 - Collaborate on different features in parallel
@@ -79,6 +82,7 @@ git branch
 ```
 
 **Expected output**: 
+
 ```
 * main
 ```
@@ -298,15 +302,15 @@ The commits remain in the history — only the branch label is removed.
 
 ## Command Summary
 
-| Command | Description |
-|---------|-------------|
-| `git branch` | List branches |
-| `git branch <name>` | Create a branch |
-| `git checkout <branch>` | Switch to a branch |
-| `git switch <branch>` | Switch to a branch (modern) |
-| `git checkout -b <name>` | Create and switch to a branch |
-| `git merge --no-edit <branch>` | Merge a branch into current |
-| `git branch -d <name>` | Delete a branch |
+| Command                        | Description                   |
+| ------------------------------ | ----------------------------- |
+| `git branch`                   | List branches                 |
+| `git branch <name>`            | Create a branch               |
+| `git checkout <branch>`        | Switch to a branch            |
+| `git switch <branch>`          | Switch to a branch (modern)   |
+| `git checkout -b <name>`       | Create and switch to a branch |
+| `git merge --no-edit <branch>` | Merge a branch into current   |
+| `git branch -d <name>`         | Delete a branch               |
 
 ---
 

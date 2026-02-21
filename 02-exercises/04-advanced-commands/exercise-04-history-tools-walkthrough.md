@@ -1,9 +1,11 @@
-# Exercise 4: Tags, Stash, Squash, Reflog & Conflicts
+# Exercise 4: Tags, Stash, Squash, Reflog
 
 ## Goal
-Master advanced history management tools: `tag`, `stash`, interactive `rebase` (squash), `reflog`, and **conflict resolution**.
+
+Master advanced history management tools: `tag`, `stash`, interactive `rebase` (squash), `reflog`.
 
 > 💡 **Tip**: After every meaningful change, run:
+> 
 > ```bash
 > git status
 > git log --oneline --graph --all
@@ -152,6 +154,7 @@ git status
 ```
 
 The file is **modified** — you can't switch branches safely.
+
 > 💡You can't switch branch when you have modified files in the staging area.
 
 Stash your work:
@@ -226,6 +229,7 @@ gitGraph
 ---
 
 Clean up:
+
 - Delete the hotfix branch (it's no longer needed)
 - Remove changes to `app.txt` to clean the staging area
 
@@ -357,131 +361,26 @@ git log --oneline
 
 ---
 
-## Step 5: Resolve a Merge Conflict
-
-Both `main` and `feature/export` have modified the **same lines** of `app.txt`. Merging them will cause a conflict.
-
-Make sure you are on `main`:
-
-```bash
-git checkout main
-```
-
-Edit the last line of `app.txt` to:
-
-```
-ENVIRONMENT=production
-```
-
-Stage and commit:
-
-```bash
-git add app.txt
-git commit -m "chore: set environment to production"
-```
-
-Now switch to `feature/export`, edit the **same line** to a different value:
-
-```bash
-git checkout feature/export
-```
-
-Edit the last line of `app.txt` to:
-
-```
-ENVIRONMENT=staging
-```
-
-```bash
-git add app.txt
-git commit -m "chore: set environment to staging on export branch"
-```
-
-Go back to `main` and attempt the merge:
-
-```bash
-git checkout main
-git merge feature/export
-```
-
-**Expected output**:
-```
-CONFLICT (content): Merge conflict in app.txt
-Automatic merge failed; fix conflicts and then commit the result.
-```
-
-Open `app.txt`. You will see conflict markers:
-
-```
-<<<<<<< HEAD
-ENVIRONMENT=production
-=======
-ENVIRONMENT=staging
->>>>>>> feature/export
-```
-
-Resolve the conflict by choosing (or combining) the right value. In this case, `production` is correct for `main`. Edit the file to:
-
-```
-ENVIRONMENT=production
-```
-
-Remove all conflict markers, save the file, then complete the merge:
-
-```bash
-git add app.txt
-git commit
-git log --oneline --graph --all
-```
-
-**Expected output**: a new merge commit ties the two branches together.
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '10px'}}}%%
-gitGraph
-    commit id: "feat: initial\napplication structure"
-    commit id: "feat: implement\nlogin form"
-    commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard" tag: "v1.0.0"
-    branch feature/reports
-    commit id: "feat(reports): implement\nreports page with tests"
-    checkout main
-    commit id: "feat: add reports\npage to main" tag: "v1.1.0-dev"
-    branch feature/export
-    commit id: "feat: add\nexport module"
-    commit id: "ENVIRONMENT=staging"
-    checkout main
-    commit id: "fix: bump\nversion to 1.1.1"
-    commit id: "ENVIRONMENT=production"
-    merge feature/export id: "✅ resolved merge" type: HIGHLIGHT
-```
-
-> 💡 If the conflict is too complex and you want to start over: `git merge --abort`. This restores the repository to the state before the merge attempt.
-
----
-
 ## Command Summary
 
-| Command | Description |
-|---------|-------------|
-| `git tag -a <name> -m "msg"` | Create an annotated tag at HEAD |
-| `git tag -a <name> <hash> -m "msg"` | Create a tag at a specific commit |
-| `git tag` | List all tags |
-| `git show <tag>` | Inspect a tag |
-| `git push origin --tags` | Push all tags to remote |
-| `git tag -d <name>` | Delete a local tag |
-| `git stash push -m "msg"` | Save work-in-progress |
-| `git stash list` | List stashes |
-| `git stash pop` | Restore and delete most recent stash |
-| `git stash apply stash@{N}` | Restore without deleting |
-| `git stash drop stash@{N}` | Delete a specific stash |
-| `git rebase -i HEAD~N` | Interactive rebase for last N commits |
-| `git reflog` | Show all HEAD movements |
-| `git reset --hard HEAD@{N}` | Jump to a reflog entry |
-| `git merge --abort` | Cancel an in-progress merge |
+| Command                             | Description                           |
+| ----------------------------------- | ------------------------------------- |
+| `git tag -a <name> -m "msg"`        | Create an annotated tag at HEAD       |
+| `git tag -a <name> <hash> -m "msg"` | Create a tag at a specific commit     |
+| `git tag`                           | List all tags                         |
+| `git show <tag>`                    | Inspect a tag                         |
+| `git push origin --tags`            | Push all tags to remote               |
+| `git tag -d <name>`                 | Delete a local tag                    |
+| `git stash push -m "msg"`           | Save work-in-progress                 |
+| `git stash list`                    | List stashes                          |
+| `git stash pop`                     | Restore and delete most recent stash  |
+| `git stash apply stash@{N}`         | Restore without deleting              |
+| `git stash drop stash@{N}`          | Delete a specific stash               |
+| `git rebase -i HEAD~N`              | Interactive rebase for last N commits |
+| `git reflog`                        | Show all HEAD movements               |
 
 ---
 
 ## Next Step
 
-➡️ Go to the [Merge vs Rebase vs Cherry-pick exercise](./exercise-04-merge-rebase-walkthrough.md)
+➡️ Go to the [Merge vs Rebase vs Cherry-pick exercise](./exercise-05-merge-rebase-walkthrough.md)

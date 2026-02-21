@@ -7,11 +7,11 @@ This module covers advanced Git techniques used daily in professional workflows:
 - 📦 **Stash** — temporarily shelve uncommitted work
 - 🗜️ **Squash** — collapse multiple commits into one
 - 🔍 **Reflog** — the safety net for lost commits
+
 ---
+
 - ⚔️ **Conflict resolution** — handle divergent changes on the same file
 - 🔀 **Merge vs Rebase vs Cherry-pick** — three strategies to integrate changes
-
-
 
 Tags
 ======================================================================
@@ -31,10 +31,10 @@ gitGraph
 
 ### Lightweight vs Annotated Tags
 
-| Type | Command | Stored as | Use case |
-| --- | --- | --- | --- |
-| **Lightweight** | `git tag v1.0.0` | A simple pointer to a commit | Quick local markers |
-| **Annotated** | `git tag -a v1.0.0 -m "message"` | A full Git object (author, date, message) | Official releases ✅ |
+| Type            | Command                          | Stored as                                 | Use case            |
+| --------------- | -------------------------------- | ----------------------------------------- | ------------------- |
+| **Lightweight** | `git tag v1.0.0`                 | A simple pointer to a commit              | Quick local markers |
+| **Annotated**   | `git tag -a v1.0.0 -m "message"` | A full Git object (author, date, message) | Official releases ✅ |
 
 Annotated tags are preferred for releases because they carry metadata and can be signed with GPG.
 
@@ -49,8 +49,6 @@ git push origin --delete v1.0.0                 # delete remote tag
 ```
 
 > ⚠️ Tags are **not pushed automatically** with `git push`. You must push them explicitly.
-
-
 
 Stash
 ======================================================================
@@ -85,8 +83,6 @@ git stash clear                              # delete all stashes
 ```
 
 > 💡 By default, `git stash` does **not** stash untracked files. Use `git stash push -u` to include them too.
-
-
 
 Squash Commits
 ======================================================================
@@ -137,8 +133,6 @@ After saving, Git opens a second editor to write the **combined commit message**
 
 > ⚠️ Squash rewrites history. Only squash commits that have **not been pushed** to a shared remote, or use with care and coordinate with your team.
 
-
-
 Reflog
 ======================================================================
 
@@ -170,66 +164,6 @@ git checkout -b recovered HEAD@{2}  # recover lost commits on a new branch
 > 💡 Reflog entries are kept for **90 days** by default. After that, they are garbage-collected. You cannot recover commits from before that window.
 
 > ⚠️ Reflog is **local only** — it is not pushed to the remote. It is a personal safety net, not a team backup.
-
-
-
-Conflict Resolution
-======================================================================
-
-A **merge conflict** occurs when two branches have modified the **same lines** of the same file in different ways. Git cannot decide automatically which version to keep — it asks you.
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '11px'}}}%%
-gitGraph
-    commit id: "base: config.txt"
-    branch hotfix
-    commit id: "hotfix: PORT=8080"
-    checkout main
-    commit id: "main: PORT=9090"
-    merge hotfix id: "⚔️ CONFLICT"
-```
-
-When a conflict occurs, Git marks the affected file with **conflict markers**:
-
-```
-<<<<<<< HEAD
-PORT=9090
-=======
-PORT=8080
->>>>>>> hotfix
-```
-
-- The block between `<<<<<<< HEAD` and `=======` is **your current branch** (what is already on `main`).
-- The block between `=======` and `>>>>>>> hotfix` is the **incoming change** (what is being merged in).
-
-### Resolution workflow
-
-```mermaid
-sequenceDiagram
-    participant GIT as 📦 .git
-    participant WD as 📁 Working Directory
-    participant SA as 📋 Stage Area
-
-    GIT ->> WD: git merge hotfix → ⚔️ CONFLICT
-    Note over WD: Conflict markers added to file
-    Note over WD: ✏️ Manually edit file (choose/combine versions)
-    WD ->> SA: git add <resolved-file>
-    SA ->> GIT: git commit
-    Note over GIT: ✅ Merge commit created
-```
-
-```bash
-git merge feature/login               # triggers the conflict
-git status                            # shows which files are conflicted
-# → open files, edit conflict markers, save
-git add <file>                        # mark as resolved
-git commit                            # complete the merge
-git merge --abort                     # ← escape hatch: cancel the entire merge
-```
-
-> 💡 VS Code has a built-in merge editor: it shows the conflict in a three-panel view (Current | Incoming | Result) so you can click to accept either side or combine them.
-
-
 
 Merge vs Rebase vs Cherry-pick
 ======================================================================
@@ -310,8 +244,9 @@ gitGraph
     commit id: "C' (replayed)"
     commit id: "D' (replayed)"
 ```
+
 > Note: the rebased commits `C'` and `D'` have **new hashes** — they are technically new objects, even if their content is identical.
-> 
+
 At this point, you can go back to the main branch and do a fast-forward merge.
 
 ```mermaid
@@ -381,9 +316,76 @@ flowchart TD
     F -->|Yes| G["🍒 git cherry-pick"]
 ```
 
-| Strategy | History shape | Rewrites history | Safe on shared branches | Best for |
-|---|---|---|---|---|
-| `merge` | Non-linear | ❌ No | ✅ Yes | Integrating features into `main` |
-| `merge --no-ff` | Non-linear + merge commit | ❌ No | ✅ Yes | Preserving feature branch evidence |
-| `rebase` | Linear | ✅ Yes | ⚠️ Local only | Cleaning up before a PR/merge |
-| `cherry-pick` | Adds one commit | ✅ Yes (new hash) | ⚠️ Use carefully | Backporting a specific fix |
+| Strategy        | History shape             | Rewrites history | Safe on shared branches | Best for                           |
+| --------------- | ------------------------- | ---------------- | ----------------------- | ---------------------------------- |
+| `merge`         | Non-linear                | ❌ No             | ✅ Yes                   | Integrating features into `main`   |
+| `merge --no-ff` | Non-linear + merge commit | ❌ No             | ✅ Yes                   | Preserving feature branch evidence |
+| `rebase`        | Linear                    | ✅ Yes            | ⚠️ Local only           | Cleaning up before a PR/merge      |
+| `cherry-pick`   | Adds one commit           | ✅ Yes (new hash) | ⚠️ Use carefully        | Backporting a specific fix         |
+
+---
+
+### Final Takeaway
+
+> **Merge integrates.**  
+> **Rebase reshapes.**  
+> **Cherry-pick extracts.**
+> 
+> Each strategy changes the shape of your history.  
+> Make the change intentionally.
+
+Conflict Resolution
+======================================================================
+
+A **merge conflict** occurs when two branches have modified the **same lines** of the same file in different ways. Git cannot decide automatically which version to keep — it asks you.
+
+```mermaid
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '11px'}}}%%
+gitGraph
+    commit id: "base: config.txt"
+    branch hotfix
+    commit id: "hotfix: PORT=8080"
+    checkout main
+    commit id: "main: PORT=9090"
+    merge hotfix id: "⚔️ CONFLICT"
+```
+
+When a conflict occurs, Git marks the affected file with **conflict markers**:
+
+```
+<<<<<<< HEAD
+PORT=9090
+=======
+PORT=8080
+>>>>>>> hotfix
+```
+
+- The block between `<<<<<<< HEAD` and `=======` is **your current branch** (what is already on `main`).
+- The block between `=======` and `>>>>>>> hotfix` is the **incoming change** (what is being merged in).
+
+### Resolution workflow
+
+```mermaid
+sequenceDiagram
+    participant GIT as 📦 .git
+    participant WD as 📁 Working Directory
+    participant SA as 📋 Stage Area
+
+    GIT ->> WD: git merge hotfix → ⚔️ CONFLICT
+    Note over WD: Conflict markers added to file
+    Note over WD: ✏️ Manually edit file (choose/combine versions)
+    WD ->> SA: git add <resolved-file>
+    SA ->> GIT: git commit
+    Note over GIT: ✅ Merge commit created
+```
+
+```bash
+git merge feature/login               # triggers the conflict
+git status                            # shows which files are conflicted
+# → open files, edit conflict markers, save
+git add <file>                        # mark as resolved
+git commit                            # complete the merge
+git merge --abort                     # ← escape hatch: cancel the entire merge
+```
+
+> 💡 VS Code has a built-in merge editor: it shows the conflict in a three-panel view (Current | Incoming | Result) so you can click to accept either side or combine them.
