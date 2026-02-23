@@ -1,12 +1,3 @@
-Advanced Git Concepts
-======================================================================
-
-This module covers advanced Git techniques used daily in professional workflows:
-
-- 🔀 **Merge vs Rebase vs Cherry-pick** — three strategies to integrate changes
-  - 🗜️ **Squash** — collapse multiple commits into one
-- ⚔️ **Conflict resolution** — handle divergent changes on the same file
-
 Merge vs Rebase vs Cherry-pick
 ======================================================================
 
@@ -225,59 +216,3 @@ flowchart TD
 > 
 > Each strategy changes the shape of your history.  
 > Make the change intentionally.
-
-Conflict Resolution
-======================================================================
-
-A **merge conflict** occurs when two branches have modified the **same lines** of the same file in different ways. Git cannot decide automatically which version to keep — it asks you.
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#F57C00', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '11px'}}}%%
-gitGraph
-    commit id: "base: config.txt"
-    branch hotfix
-    commit id: "hotfix: PORT=8080"
-    checkout main
-    commit id: "main: PORT=9090"
-    merge hotfix id: "⚔️ CONFLICT"
-```
-
-When a conflict occurs, Git marks the affected file with **conflict markers**:
-
-```
-<<<<<<< HEAD
-PORT=9090
-=======
-PORT=8080
->>>>>>> hotfix
-```
-
-- The block between `<<<<<<< HEAD` and `=======` is **your current branch** (what is already on `main`).
-- The block between `=======` and `>>>>>>> hotfix` is the **incoming change** (what is being merged in).
-
-### Resolution workflow
-
-```mermaid
-sequenceDiagram
-    participant GIT as 📦 .git
-    participant WD as 📁 Working Directory
-    participant SA as 📋 Stage Area
-
-    GIT ->> WD: git merge hotfix → ⚔️ CONFLICT
-    Note over WD: Conflict markers added to file
-    Note over WD: ✏️ Manually edit file (choose/combine versions)
-    WD ->> SA: git add <resolved-file>
-    SA ->> GIT: git commit
-    Note over GIT: ✅ Merge commit created
-```
-
-```bash
-git merge feature/login               # triggers the conflict
-git status                            # shows which files are conflicted
-# → open files, edit conflict markers, save
-git add <file>                        # mark as resolved
-git commit                            # complete the merge
-git merge --abort                     # ← escape hatch: cancel the entire merge
-```
-
-> 💡 VS Code has a built-in merge editor: it shows the conflict in a three-panel view (Current | Incoming | Result) so you can click to accept either side or combine them.

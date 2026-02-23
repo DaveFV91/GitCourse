@@ -1,6 +1,5 @@
-# Exercise 6: Pull Requests & the Squash Merge Trap
-
-## Goal
+Pull Requests & the Squash Merge Trap
+======================================================================
 
 Understand the Pull Request workflow in Azure DevOps, and master a common advanced scenario: diagnosing the "ahead + behind on identical content" problem caused by improper use of squash merges.
 
