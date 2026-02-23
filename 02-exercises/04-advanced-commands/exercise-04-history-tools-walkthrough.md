@@ -323,14 +323,14 @@ Go back to `main`:
 
 ```bash
 git checkout main
-git log --oneline
+git log --oneline --graph --all
 ```
 
 Copy the hash of the most recent commit. Now simulate a disaster — accidentally reset to 3 commits ago:
 
 ```bash
 git reset --hard HEAD~3
-git log --oneline
+git log --oneline --graph --all
 ```
 
 **The last 3 commits have vanished.** In a panic, a junior developer might think the work is lost forever. It isn't.
@@ -358,6 +358,111 @@ git log --oneline
 **The commits are back.** 🎉
 
 > 💡 `git reflog` also works for recovering deleted branches. If you delete a branch by mistake, find its last commit in the reflog and create a new branch pointing to it: `git checkout -b recovered-branch <hash>`
+
+---
+
+## Step 5: Resolve a Merge Conflict
+
+Both `main` and `feature/export` have modified the **same lines** of `app.txt`. Merging them will cause a conflict.
+
+Make sure you are on `main`:
+
+```bash
+git checkout main
+```
+
+Edit the last line of `app.txt` to:
+
+```
+ENVIRONMENT=production
+```
+
+Stage and commit:
+
+```bash
+git add app.txt
+git commit -m "chore: set environment to production"
+```
+
+Now switch to `feature/export`, edit the **same line** to a different value:
+
+```bash
+git checkout feature/export
+```
+
+Edit the last line of `app.txt` to:
+
+```
+ENVIRONMENT=staging
+```
+
+```bash
+git add app.txt
+git commit -m "chore: set environment to staging on export branch"
+git log --oneline --graph --all
+```
+
+Go back to `main` and attempt the merge:
+
+```bash
+git checkout main
+git merge feature/export
+```
+
+**Expected output**:
+
+```
+CONFLICT (content): Merge conflict in app.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Open `app.txt`. You will see conflict markers:
+
+```
+<<<<<<< HEAD
+ENVIRONMENT=production
+=======
+ENVIRONMENT=staging
+>>>>>>> feature/export
+```
+
+Resolve the conflict by choosing (or combining) the right value. In this case, `production` is correct for `main`. Edit the file to:
+
+```
+ENVIRONMENT=production
+```
+
+Remove all conflict markers, save the file, then complete the merge:
+
+```bash
+git add app.txt
+git commit
+git log --oneline --graph --all
+```
+
+**Expected output**: a new merge commit ties the two branches together.
+
+```mermaid
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '10px'}}}%%
+gitGraph
+    commit id: "feat: initial\napplication structure"
+    commit id: "feat: implement\nlogin form"
+    commit id: "chore: add\nconfig file"
+    commit id: "feat: add\ndashboard" tag: "v1.0.0"
+    branch feature/reports
+    commit id: "feat(reports): implement\nreports page with tests"
+    checkout main
+    commit id: "feat: add reports\npage to main" tag: "v1.1.0-dev"
+    branch feature/export
+    commit id: "feat: add\nexport module"
+    commit id: "ENVIRONMENT=staging"
+    checkout main
+    commit id: "fix: bump\nversion to 1.1.1"
+    commit id: "ENVIRONMENT=production"
+    merge feature/export id: "✅ resolved merge" type: HIGHLIGHT
+```
+
+> 💡 If the conflict is too complex and you want to start over: `git merge --abort`. This restores the repository to the state before the merge attempt.
 
 ---
 

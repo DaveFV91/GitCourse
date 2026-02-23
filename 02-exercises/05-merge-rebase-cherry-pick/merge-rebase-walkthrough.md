@@ -135,7 +135,7 @@ gitGraph
 
 ```bash
 git checkout main
-git merge hotfix/button-color
+git merge hotfix/button-color --ff-only
 ```
 
 **Expected output from Git**:
@@ -233,7 +233,7 @@ Because `feature/footer` is now directly ahead of `main` with no divergence, the
 
 ```bash
 git checkout main
-git merge feature/footer
+git merge feature/footer --ff-only
 ```
 
 ```bash
@@ -289,7 +289,7 @@ The `v1.0.0` release was cut at `feat: add dashboard`. Since then, `main` has re
 
 ```bash
 git checkout main
-git log --oneline
+git log --oneline --graph --all
 ```
 
 Locate `fix: critical null pointer in auth` and copy its hash (e.g. `abc1234`).
@@ -326,110 +326,6 @@ gitGraph
 > 💡 Cherry-pick is the standard tool for **backporting** a hotfix to a maintenance branch. The duplicated commit with a different hash is expected and harmless — if `release/v1.0` is eventually fully merged back into `main`, Git will detect that the changes are already applied and skip the duplicate.
 
 > ⚠️ If cherry-pick encounters a conflict (because the surrounding code differs between branches), Git pauses and asks you to resolve it exactly as you would for a merge conflict. Use `git cherry-pick --abort` to cancel.
-
----
-
-## Step 5: Resolve a Merge Conflict
-
-Both `main` and `feature/export` have modified the **same lines** of `app.txt`. Merging them will cause a conflict.
-
-Make sure you are on `main`:
-
-```bash
-git checkout main
-```
-
-Edit the last line of `app.txt` to:
-
-```
-ENVIRONMENT=production
-```
-
-Stage and commit:
-
-```bash
-git add app.txt
-git commit -m "chore: set environment to production"
-```
-
-Now switch to `feature/export`, edit the **same line** to a different value:
-
-```bash
-git checkout feature/export
-```
-
-Edit the last line of `app.txt` to:
-
-```
-ENVIRONMENT=staging
-```
-
-```bash
-git add app.txt
-git commit -m "chore: set environment to staging on export branch"
-```
-
-Go back to `main` and attempt the merge:
-
-```bash
-git checkout main
-git merge feature/export
-```
-
-**Expected output**:
-
-```
-CONFLICT (content): Merge conflict in app.txt
-Automatic merge failed; fix conflicts and then commit the result.
-```
-
-Open `app.txt`. You will see conflict markers:
-
-```
-<<<<<<< HEAD
-ENVIRONMENT=production
-=======
-ENVIRONMENT=staging
->>>>>>> feature/export
-```
-
-Resolve the conflict by choosing (or combining) the right value. In this case, `production` is correct for `main`. Edit the file to:
-
-```
-ENVIRONMENT=production
-```
-
-Remove all conflict markers, save the file, then complete the merge:
-
-```bash
-git add app.txt
-git commit
-git log --oneline --graph --all
-```
-
-**Expected output**: a new merge commit ties the two branches together.
-
-```mermaid
-%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'git2': '#F57C00', 'git3': '#FF6B6B', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'gitBranchLabel2': '#fff', 'gitBranchLabel3': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#FFF3E0', 'commitLabelFontSize': '10px'}}}%%
-gitGraph
-    commit id: "feat: initial\napplication structure"
-    commit id: "feat: implement\nlogin form"
-    commit id: "chore: add\nconfig file"
-    commit id: "feat: add\ndashboard" tag: "v1.0.0"
-    branch feature/reports
-    commit id: "feat(reports): implement\nreports page with tests"
-    checkout main
-    commit id: "feat: add reports\npage to main" tag: "v1.1.0-dev"
-    branch feature/export
-    commit id: "feat: add\nexport module"
-    commit id: "ENVIRONMENT=staging"
-    checkout main
-    commit id: "fix: bump\nversion to 1.1.1"
-    commit id: "ENVIRONMENT=production"
-    merge feature/export id: "✅ resolved merge" type: HIGHLIGHT
-```
-
-> 💡 If the conflict is too complex and you want to start over: `git merge --abort`. This restores the repository to the state before the merge attempt.
 
 ---
 
