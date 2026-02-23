@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM  setup-exercise5-step4.bat
-REM  Creates "ex5-step4":
+REM  setup-exercise4-step4.bat
+REM  Creates "ex4-step4":
 REM    main:          feat: initial homepage  ->  feat: add login
 REM                   ->  feat: add dashboard (tag: v1.0.0)
 REM                   ->  feat: add search
@@ -14,17 +14,17 @@ echo.
 echo  ============================================================
 echo   Git Advanced - Exercise 5 / Step 4
 echo   Topic: Cherry-pick (backport a fix to a release branch)
-echo   Creating "ex5-step4" repository...
+echo   Creating "ex4-step4" repository...
 echo  ============================================================
 echo.
 
-if exist ex5-step4 (
-    echo  [!] Removing existing "ex5-step4" folder...
-    rmdir /s /q ex5-step4
+if exist ex4-step4 (
+    echo  [!] Removing existing "ex4-step4" folder...
+    rmdir /s /q ex4-step4
 )
 
-mkdir ex5-step4
-cd ex5-step4
+mkdir ex4-step4
+cd ex4-step4
 git init
 git config user.name "Dev User"
 git config user.email "dev@example.com"

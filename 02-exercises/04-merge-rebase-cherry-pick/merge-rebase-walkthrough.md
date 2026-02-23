@@ -50,8 +50,8 @@ sequenceDiagram
 ### Setup
 
 ```bash
-setup-exercise5-step1.bat
-cd ex5-step1
+setup-exercise4-step1.bat
+cd ex4-step1
 ```
 
 ### Starting state
@@ -109,8 +109,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step2.bat
-cd ex5-step2
+setup-exercise4-step2.bat
+cd ex4-step2
 ```
 
 ### Starting state
@@ -174,8 +174,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step3.bat
-cd ex5-step3
+setup-exercise4-step3.bat
+cd ex4-step3
 ```
 
 ### Starting state
@@ -260,8 +260,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step4.bat
-cd ex5-step4
+setup-exercise4-step4.bat
+cd ex4-step4
 ```
 
 ### Starting state

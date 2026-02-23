@@ -1,4 +1,4 @@
-# Exercise 4: Tags, Stash, Squash, Reflog
+# Exercise 5: Tags, Stash, Squash, Reflog
 
 ## Goal
 
@@ -15,7 +15,7 @@ Master advanced history management tools: `tag`, `stash`, interactive `rebase` (
 
 ## Setup
 
-Run `setup-exercise4.bat` to create a ready-made repository called `advanced-project` with a realistic commit history. Navigate into it:
+Run `setup-exercise5.bat` to create a ready-made repository called `advanced-project` with a realistic commit history. Navigate into it:
 
 ```bash
 cd advanced-project
