@@ -1,7 +1,7 @@
 Merge vs Rebase vs Cherry-pick
 ======================================================================
 
-These are the three main strategies to bring commits from one branch into another. Each has a different impact on **history shape**, **safety**, and **use case**.
+These are the three main strategies to bring commits from one branch into another. Each has a different impact on **history shape**.
 
 ---
 
@@ -40,9 +40,33 @@ gitGraph
     merge feature id: "M (merge commit)"
 ```
 
-✅ Safe on shared branches — does not rewrite history.
-✅ You always know exactly when and where integrations happened.
-⚠️ History can become tangled with many parallel branches.
+- ✅ Safe on shared branches — does not rewrite history.
+- ✅ You always know exactly when and where integrations happened.
+- ⚠️ History can become tangled with many parallel branches.
+
+#### Practical note: backmerge from `main`
+
+In a real project, a common and safe approach is to do a **backmerge from `main` into the feature branch** so your work stays aligned with the latest integrations (bug fixes, refactors, and teammates' commits).
+
+```mermaid
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'main'}, 'themeVariables': { 'git0': '#1976D2', 'git1': '#43A047', 'gitBranchLabel0': '#fff', 'gitBranchLabel1': '#fff', 'commitLabelColor': '#333', 'commitLabelBackground': '#E3F2FD', 'commitLabelFontSize': '11px'}}}%%
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    commit id: "E"
+    commit id: "F"
+    checkout feature
+    merge main id: "BM (backmerge from main)"
+    commit id: "G (feature updated)"
+    checkout main
+    merge feature id: "M (final merge to main)"
+```
+
+In practice: you work on `feature`, periodically run `git merge main` while on `feature`, and then merge `feature` back into `main` when it is ready.
 
 ---
 
@@ -136,7 +160,7 @@ gitGraph
 #### How interactive rebase works
 
 ```bash
-git rebase -i HEAD~4   # open interactive editor for last 4 commits
+git rebase -i HEAD~5   # open interactive editor for last 5 commits
 ```
 
 Git opens an editor with a list of commits. You change the word `pick` to `squash` (or `s`) for every commit you want to fold into the one above it:
@@ -146,7 +170,7 @@ pick  a1b2c3d WIP login form
 squash b2c3d4e fix typo
 squash c3d4e5f fix typo again
 squash d4e5f6g ok now it works
-pick  e5f6g7h added tests
+squash e5f6g7h added tests
 ```
 
 After saving, Git opens a second editor to write the **combined commit message**.
@@ -173,9 +197,9 @@ gitGraph
     cherry-pick id: "D 🍒" 
 ```
 
-✅ Surgical: bring only the fix you need without the whole branch.
-✅ Useful to **backport a hotfix** from `main` to a release branch.
-⚠️ Creates a duplicate commit with a new hash — can cause confusion if the branch is later fully merged.
+- ✅ Surgical: bring only the fix you need without the whole branch.
+- ✅ Useful to **backport a hotfix** from `main` to a release branch.
+- ⚠️ Creates a duplicate commit with a new hash — can cause confusion if the branch is later fully merged.
 
 ```bash
 git cherry-pick <commit-hash>            # pick one commit
@@ -190,21 +214,14 @@ git cherry-pick --abort                  # cancel if a conflict is too complex
 
 ```mermaid
 flowchart TD
-    A["🤔 How should I integrate changes?"] --> B{"Has the branch\nbeen pushed/shared?"}
-    B -->|No, it's local| C{"Do I want a\nclean linear history?"}
-    B -->|Yes, it's shared| D["✅ git merge\n(safe, preserves history)"]
-    C -->|Yes| E["✅ git rebase\nthen merge"]
+    A["🤔 How should I integrate changes?"] --> B{"Has the branch been pushed/shared?"}
+    B -->|No, it's local| C{"Do I want a clean linear history?"}
+    B -->|Yes, it's shared| D["✅ git merge (safe, preserves history)"]
+    C -->|Yes| E["✅ git rebase then merge"]
     C -->|No| D
-    A --> F{"Do I only need\none specific commit?"}
+    A --> F{"Do I only need one specific commit?"}
     F -->|Yes| G["🍒 git cherry-pick"]
 ```
-
-| Strategy        | History shape             | Rewrites history | Safe on shared branches | Best for                           |
-| --------------- | ------------------------- | ---------------- | ----------------------- | ---------------------------------- |
-| `merge`         | Non-linear                | ❌ No             | ✅ Yes                   | Integrating features into `main`   |
-| `merge --no-ff` | Non-linear + merge commit | ❌ No             | ✅ Yes                   | Preserving feature branch evidence |
-| `rebase`        | Linear                    | ✅ Yes            | ⚠️ Local only           | Cleaning up before a PR/merge      |
-| `cherry-pick`   | Adds one commit           | ✅ Yes (new hash) | ⚠️ Use carefully        | Backporting a specific fix         |
 
 ---
 
