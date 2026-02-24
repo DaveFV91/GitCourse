@@ -7,8 +7,6 @@ A **Version Control System (VCS)** is a system that records changes to one or mo
 - ⏪ **Revert** to previous versions.
 - 👥 **Collaborate** with other developers.
 - 🔀 **Manage parallel versions** of the code.
-  
-  
 
 Types of VCSs
 ----------------------------------------------------------------------
@@ -28,10 +26,7 @@ flowchart
     A --> B
     B --> C
     C --> D
-
 ```
-
-
 
 ### Centralized Version Control Systems
 
@@ -50,10 +45,7 @@ flowchart TD
     A --> S
     B --> S
     C --> S
-
 ```
-
-
 
 ### Distributed Version Control Systems (DVCS) ✅
 
@@ -74,7 +66,6 @@ flowchart TD
     L1 <-->|push/pull| R
     L2 <-->|push/pull| R
     L1 <-.->|collaboration| L2
-
 ```
 
 Git
@@ -111,7 +102,6 @@ sequenceDiagram
     🌐 Remote Repo -->> 📦 .git: fetch
     📦 .git -->> 📁 Working Directory: merge
     🌐 Remote Repo ->> 📁 Working Directory: pull
-
 ```
 
 | Area                     | Descrizione                       | Comando                                                                      |
@@ -146,14 +136,12 @@ sequenceDiagram
     Note over WD,RR: ✏️ Edit file → MODIFIED | git add → STAGED | git commit → COMMITTED | ciclo continuo ↩
 ```
 
-| Status | Meaning | Notes |
-| - | - | - |
-**Untracked** | The file exists in the working directory but is not tracked by Git. | Rewinding to a previous commit does not affect untracked files, since they are outside version control.
-**Staged** | The file has been added to the staging area and is ready to be committed. | In Visual Studio Code, the *Commit* action implicitly performs `git add` followed by `git commit`.
-**Committed** | The file has been written to the repository’s history | Previous revisions can be inspected with `git checkout <commit>` or restored using `git restore --source <commit>`.
-**Modified** | The file has local changes that are not yet staged. | Switching branches while having modified files (not yet staged) may lead to merge conflicts due to divergent file versions.
-
-
+| Status        | Meaning                                                                   | Notes                                                                                                                       |
+| ------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Untracked** | The file exists in the working directory but is not tracked by Git.       | Rewinding to a previous commit does not affect untracked files, since they are outside version control.                     |
+| **Staged**    | The file has been added to the staging area and is ready to be committed. | In Visual Studio Code, the *Commit* action implicitly performs `git add` followed by `git commit`.                          |
+| **Committed** | The file has been written to the repository’s history                     | Previous revisions can be inspected with `git checkout <commit>` or restored using `git restore --source <commit>`.         |
+| **Modified**  | The file has local changes that are not yet staged.                       | Switching branches while having modified files (not yet staged) may lead to merge conflicts due to divergent file versions. |
 
 ### .gitignore
 
@@ -168,10 +156,8 @@ docs/**/*.txt # ignores any .txt file in the docs folder and its subfolders
 ```
 
 > 👀 Power BI `.gitignore`:
-![FileGitIgnorePBI.png](/images/FileGitIgnorePBI.png)
-Cache.abf files, being very large binary files, are usually untracked.
-
-
+> ![FileGitIgnorePBI.png](/images/FileGitIgnorePBI.png)
+> Cache.abf files, being very large binary files, are usually untracked.
 
 Install Git on Windows
 ======================================================================

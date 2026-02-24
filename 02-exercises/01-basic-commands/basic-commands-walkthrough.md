@@ -1,13 +1,16 @@
 # Exercise 1: Git Basic Commands
 
 ## Goal
+
 Learn the fundamental Git commands: `init`, `status`, `add`, `commit`, `log`, `diff`, `checkout`, `rm --cached`, `reset`.
 
 > 💡 **Tip**: After every meaningful change, run these two commands to observe what happened:
+> 
 > ```bash
 > git status # display the state of the working directory and the staging area 
 > git log --oneline --graph --all # display commit history
 > ```
+> 
 > This habit helps you build a mental model of what Git is doing under the hood.
 
 ---
@@ -148,6 +151,7 @@ git log --oneline --graph --all
 ```
 
 **Expected output**:
+
 ```
 a1b2c3d (HEAD -> main) feat: add feature list v1.0
 x9y8z7w feat: add order project - initial version
@@ -175,11 +179,13 @@ sequenceDiagram
 **HEAD** is Git's pointer to "where you are right now." Let's explore the history.
 
 View the full log:
+
 ```bash
 git log --oneline --graph --all
 ```
 
 You'll see something like:
+
 ```
 a1b2c3d (HEAD -> main) feat: add feature list v1.0
 x9y8z7w feat: add order project - initial version
@@ -194,6 +200,7 @@ git checkout <first-commit-hash>
 Open `project.txt` — the file is back to its original version! The features section doesn't exist yet.
 
 Check the log:
+
 ```bash
 git log --oneline --graph --all
 ```
@@ -279,6 +286,7 @@ git log --oneline --graph --all
 ```
 
 > 💡Quick note:
+> 
 > ```bash
 > # alternative: manually remove credentials.txt and then --> git add credentials.txt
 > rm credentials.txt # delete the file locally (file is in "modified" state)
@@ -293,6 +301,7 @@ git show HEAD~1:credentials.txt
 ```
 
 > 💡Alternative:
+> 
 > ```bash
 > git show <second-last-commit-hash>:credentials.txt
 > ```
@@ -353,22 +362,22 @@ git status
 
 ## Command Summary
 
-| Command | Description |
-|---------|-------------|
-| `git init` | Initialize a repository |
-| `git status` | Show the state of files |
-| `git add <file>` | Add files to the staging area |
-| `git add *` | Add all changed files |
-| `git commit -m "msg"` | Create a commit |
-| `git log --oneline --graph --all` | Show commit history |
-| `git diff` | Show differences vs last commit |
-| `git checkout <hash>` | Move HEAD to a specific commit |
-| `git checkout main` | Return HEAD to the main branch |
-| `git rm --cached <file>` | Unstage a file (keep on disk) |
-| `git rm <file>` | Remove a file from repo and disk |
-| `git reset --hard HEAD~N` | Rewrite history: remove last N commits |
-| `git show <hash>:<file>` | View a file at a specific commit |
-| `.gitignore` | File listing patterns Git should ignore |
+| Command                           | Description                             |
+| --------------------------------- | --------------------------------------- |
+| `git init`                        | Initialize a repository                 |
+| `git status`                      | Show the state of files                 |
+| `git add <file>`                  | Add files to the staging area           |
+| `git add *`                       | Add all changed files                   |
+| `git commit -m "msg"`             | Create a commit                         |
+| `git log --oneline --graph --all` | Show commit history                     |
+| `git diff`                        | Show differences vs last commit         |
+| `git checkout <hash>`             | Move HEAD to a specific commit          |
+| `git checkout main`               | Return HEAD to the main branch          |
+| `git rm --cached <file>`          | Unstage a file (keep on disk)           |
+| `git rm <file>`                   | Remove a file from repo and disk        |
+| `git reset --hard HEAD~N`         | Rewrite history: remove last N commits  |
+| `git show <hash>:<file>`          | View a file at a specific commit        |
+| `.gitignore`                      | File listing patterns Git should ignore |
 
 ---
 
@@ -385,24 +394,28 @@ It's your first day as a developer at a startup. Your team lead gives you a seri
 Your team is building a blog engine. Start fresh:
 
 1. Create a folder called `blog-engine`, initialize a Git repo, and create a file called `README.md` with:
+   
    ```
    # Blog Engine
    A simple static blog generator.
    ```
+   
    Commit it.
 
 2. Your team lead asks you to add a roadmap. Create `roadmap.md`:
+   
    ```
    # Roadmap
-
+   
    ## v1.0
    - Markdown rendering
    - Post listing
-
+   
    ## v2.0
    - Tags and categories
    - Search
    ```
+   
    Commit it.
 
 3. A colleague asks: *"What exactly did you change between the first and second commit?"*
@@ -413,6 +426,7 @@ Your team is building a blog engine. Start fresh:
 ### Scenario 2 — The Wrong File
 
 The ops team sends you a database connection file to test locally. You save it as `db-config.env`:
+
 ```
 MONGO_URI=mongodb+srv://admin:Rl$9kWq!@cluster0.example.net
 REDIS_URL=redis://:hunter2@cache.internal:6379
@@ -427,6 +441,7 @@ REDIS_URL=redis://:hunter2@cache.internal:6379
 ### Scenario 3 — The Broken Deploy
 
 You're developing the deploy script. Create `deploy.sh`:
+
 ```
 #!/bin/bash
 echo "Deploying to staging..."
@@ -478,57 +493,71 @@ A junior developer made a mess. Simulate it:
 Below you'll find some common alternatives to `git reset --hard HEAD~2`, with a brief note on when to use each.
 
 - `git reset --hard <commit>`
-    ```bash
-    git reset --hard HEAD~2
-    # or use the commit hash
-    git reset --hard a1b2c3d
-    ```
+  
+  ```bash
+  git reset --hard HEAD~2
+  # or use the commit hash
+  git reset --hard a1b2c3d
+  ```
+  
     Use: locally deletes the last commits and discards all changes (destructive).
 
 - `git reset --mixed HEAD~2`
-    ```bash
-    git reset --mixed HEAD~2
-    ```
+  
+  ```bash
+  git reset --mixed HEAD~2
+  ```
+  
     Use: moves HEAD back by 2 commits but leaves changes in the working tree (unstaged).
 
 - `git reset --soft HEAD~2`
-    ```bash
-    git reset --soft HEAD~2
-    ```
+  
+  ```bash
+  git reset --soft HEAD~2
+  ```
+  
     Use: moves HEAD back but keeps changes as staged (useful for combining commits or rewriting messages).
 
 - `git revert --no-commit HEAD~2..HEAD && git commit -m "Revert last 2 commits"`
-    ```bash
-    git revert --no-commit HEAD~2..HEAD
-    git commit -m "Revert last 2 commits"
-    ```
+  
+  ```bash
+  git revert --no-commit HEAD~2..HEAD
+  git commit -m "Revert last 2 commits"
+  ```
+  
     Use: cancels the last commits by creating new revert commits — safe on repositories already pushed.
 
 - Interactive rebase (modify or remove individual commits)
-    ```bash
-    git rebase -i HEAD~3
-    # in the editor: use `drop` or remove the lines of commits to delete
-    ```
+  
+  ```bash
+  git rebase -i HEAD~3
+  # in the editor: use `drop` or remove the lines of commits to delete
+  ```
+  
     Use: clean up or reorganize local commits before pushing; rewrites history.
 
 - `git reflog` + `git reset --hard <ref>`
-    ```bash
-    git reflog
-    git reset --hard HEAD@{3}
-    ```
+  
+  ```bash
+  git reflog
+  git reset --hard HEAD@{3}
+  ```
+  
     Use: find a previous state and optionally return to it (useful for recovery).
 
 - Remove sensitive files from history (dedicated tools)
-    ```bash
-    # example with git-filter-repo (recommended over filter-branch)
-    git filter-repo --path credentials.txt --invert-paths
-    git push --force
-    ```
+  
+  ```bash
+  # example with git-filter-repo (recommended over filter-branch)
+  git filter-repo --path credentials.txt --invert-paths
+  git push --force
+  ```
+  
     Use: remove files/secrets from entire history; requires force-push and team coordination.
 
 ---
 
 Quick warnings:
+
 - `reset --hard` and `rebase` rewrite history: don't use them on commits already shared without coordination (may require `git push --force`).
 - If problem commits are already on a public remote, prefer `git revert` or coordinate a force-push with your team.
-

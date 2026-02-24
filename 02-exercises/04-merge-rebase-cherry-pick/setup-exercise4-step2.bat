@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM  setup-exercise5-step2.bat
-REM  Creates "ex5-step2":
+REM  setup-exercise4-step2.bat
+REM  Creates "ex4-step2":
 REM    main:                 feat: initial homepage  ->  chore: update config
 REM    hotfix/button-color:  fix: button color values
 REM  hotfix branches from the CURRENT TIP of main (chore: update config)
@@ -12,17 +12,17 @@ echo.
 echo  ============================================================
 echo   Git Advanced - Exercise 5 / Step 2
 echo   Topic: Fast-forward merge
-echo   Creating "ex5-step2" repository...
+echo   Creating "ex4-step2" repository...
 echo  ============================================================
 echo.
 
-if exist ex5-step2 (
-    echo  [!] Removing existing "ex5-step2" folder...
-    rmdir /s /q ex5-step2
+if exist ex4-step2 (
+    echo  [!] Removing existing "ex4-step2" folder...
+    rmdir /s /q ex4-step2
 )
 
-mkdir ex5-step2
-cd ex5-step2
+mkdir ex4-step2
+cd ex4-step2
 git init
 git config user.name "Dev User"
 git config user.email "dev@example.com"

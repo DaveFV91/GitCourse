@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM  setup-exercise5-step3.bat
-REM  Creates "ex5-step3":
+REM  setup-exercise4-step3.bat
+REM  Creates "ex4-step3":
 REM    main:           feat: initial homepage  ->  chore: update config
 REM                    ->  fix: button color values  ->  feat: add search
 REM    feature/footer: feat: add footer  ->  feat: footer social links
@@ -13,17 +13,17 @@ echo.
 echo  ============================================================
 echo   Git Advanced - Exercise 5 / Step 3
 echo   Topic: Rebase + fast-forward merge
-echo   Creating "ex5-step3" repository...
+echo   Creating "ex4-step3" repository...
 echo  ============================================================
 echo.
 
-if exist ex5-step3 (
-    echo  [!] Removing existing "ex5-step3" folder...
-    rmdir /s /q ex5-step3
+if exist ex4-step3 (
+    echo  [!] Removing existing "ex4-step3" folder...
+    rmdir /s /q ex4-step3
 )
 
-mkdir ex5-step3
-cd ex5-step3
+mkdir ex4-step3
+cd ex4-step3
 git init
 git config user.name "Dev User"
 git config user.email "dev@example.com"

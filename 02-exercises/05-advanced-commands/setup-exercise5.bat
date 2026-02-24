@@ -1,13 +1,13 @@
 @echo off
 REM ============================================================
-REM  setup-exercise3.bat
+REM  setup-exercise5.bat
 REM  Creates "advanced-project" with a realistic commit history
 REM  for the Tags / Stash / Squash / Reflog / Conflicts exercise
 REM ============================================================
 
 echo.
 echo  ============================================================
-echo   Git Advanced - Exercise 4 Setup
+echo   Git Advanced - Exercise 5 Setup
 echo   Creating "advanced-project" repository...
 echo  ============================================================
 echo.
@@ -200,6 +200,6 @@ echo   Done! Repository structure:
 echo.
 git log --oneline --graph --all
 echo.
-echo   Ready for Exercise 4.
+echo   Ready for Exercise 5.
 echo  ============================================================
 echo.

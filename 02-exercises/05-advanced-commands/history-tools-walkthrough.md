@@ -1,9 +1,11 @@
-# Exercise 4: Tags, Stash, Squash, Reflog & Conflicts
+# Exercise 5: Tags, Stash, Squash, Reflog
 
 ## Goal
-Master advanced history management tools: `tag`, `stash`, interactive `rebase` (squash), `reflog`, and **conflict resolution**.
+
+Master advanced history management tools: `tag`, `stash`, interactive `rebase` (squash), `reflog`.
 
 > 💡 **Tip**: After every meaningful change, run:
+> 
 > ```bash
 > git status
 > git log --oneline --graph --all
@@ -13,7 +15,7 @@ Master advanced history management tools: `tag`, `stash`, interactive `rebase` (
 
 ## Setup
 
-Run `setup-exercise4.bat` to create a ready-made repository called `advanced-project` with a realistic commit history. Navigate into it:
+Run `setup-exercise5.bat` to create a ready-made repository called `advanced-project` with a realistic commit history. Navigate into it:
 
 ```bash
 cd advanced-project
@@ -152,6 +154,7 @@ git status
 ```
 
 The file is **modified** — you can't switch branches safely.
+
 > 💡You can't switch branch when you have modified files in the staging area.
 
 Stash your work:
@@ -226,6 +229,7 @@ gitGraph
 ---
 
 Clean up:
+
 - Delete the hotfix branch (it's no longer needed)
 - Remove changes to `app.txt` to clean the staging area
 
@@ -319,14 +323,14 @@ Go back to `main`:
 
 ```bash
 git checkout main
-git log --oneline
+git log --oneline --graph --all
 ```
 
 Copy the hash of the most recent commit. Now simulate a disaster — accidentally reset to 3 commits ago:
 
 ```bash
 git reset --hard HEAD~3
-git log --oneline
+git log --oneline --graph --all
 ```
 
 **The last 3 commits have vanished.** In a panic, a junior developer might think the work is lost forever. It isn't.
@@ -395,6 +399,7 @@ ENVIRONMENT=staging
 ```bash
 git add app.txt
 git commit -m "chore: set environment to staging on export branch"
+git log --oneline --graph --all
 ```
 
 Go back to `main` and attempt the merge:
@@ -405,6 +410,7 @@ git merge feature/export
 ```
 
 **Expected output**:
+
 ```
 CONFLICT (content): Merge conflict in app.txt
 Automatic merge failed; fix conflicts and then commit the result.
@@ -462,26 +468,24 @@ gitGraph
 
 ## Command Summary
 
-| Command | Description |
-|---------|-------------|
-| `git tag -a <name> -m "msg"` | Create an annotated tag at HEAD |
-| `git tag -a <name> <hash> -m "msg"` | Create a tag at a specific commit |
-| `git tag` | List all tags |
-| `git show <tag>` | Inspect a tag |
-| `git push origin --tags` | Push all tags to remote |
-| `git tag -d <name>` | Delete a local tag |
-| `git stash push -m "msg"` | Save work-in-progress |
-| `git stash list` | List stashes |
-| `git stash pop` | Restore and delete most recent stash |
-| `git stash apply stash@{N}` | Restore without deleting |
-| `git stash drop stash@{N}` | Delete a specific stash |
-| `git rebase -i HEAD~N` | Interactive rebase for last N commits |
-| `git reflog` | Show all HEAD movements |
-| `git reset --hard HEAD@{N}` | Jump to a reflog entry |
-| `git merge --abort` | Cancel an in-progress merge |
+| Command                             | Description                           |
+| ----------------------------------- | ------------------------------------- |
+| `git tag -a <name> -m "msg"`        | Create an annotated tag at HEAD       |
+| `git tag -a <name> <hash> -m "msg"` | Create a tag at a specific commit     |
+| `git tag`                           | List all tags                         |
+| `git show <tag>`                    | Inspect a tag                         |
+| `git push origin --tags`            | Push all tags to remote               |
+| `git tag -d <name>`                 | Delete a local tag                    |
+| `git stash push -m "msg"`           | Save work-in-progress                 |
+| `git stash list`                    | List stashes                          |
+| `git stash pop`                     | Restore and delete most recent stash  |
+| `git stash apply stash@{N}`         | Restore without deleting              |
+| `git stash drop stash@{N}`          | Delete a specific stash               |
+| `git rebase -i HEAD~N`              | Interactive rebase for last N commits |
+| `git reflog`                        | Show all HEAD movements               |
 
 ---
 
 ## Next Step
 
-➡️ Go to the [Merge vs Rebase vs Cherry-pick exercise](./exercise-04-merge-rebase-walkthrough.md)
+➡️ Go to the [Merge vs Rebase vs Cherry-pick exercise](./exercise-05-merge-rebase-walkthrough.md)

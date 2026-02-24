@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
-REM  setup-exercise5-step1.bat
-REM  Creates "ex5-step1":
+REM  setup-exercise4-step1.bat
+REM  Creates "ex4-step1":
 REM    main:           feat: initial homepage  ->  chore: update config
 REM    feature/navbar: feat: add navbar  ->  feat: navbar active state
 REM  (branches diverged from "feat: initial homepage")
@@ -11,17 +11,17 @@ echo.
 echo  ============================================================
 echo   Git Advanced - Exercise 5 / Step 1
 echo   Topic: Merge with merge commit (--no-ff)
-echo   Creating "ex5-step1" repository...
+echo   Creating "ex4-step1" repository...
 echo  ============================================================
 echo.
 
-if exist ex5-step1 (
-    echo  [!] Removing existing "ex5-step1" folder...
-    rmdir /s /q ex5-step1
+if exist ex4-step1 (
+    echo  [!] Removing existing "ex4-step1" folder...
+    rmdir /s /q ex4-step1
 )
 
-mkdir ex5-step1
-cd ex5-step1
+mkdir ex4-step1
+cd ex4-step1
 git init
 git config user.name "Dev User"
 git config user.email "dev@example.com"

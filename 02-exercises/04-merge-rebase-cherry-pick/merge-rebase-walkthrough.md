@@ -1,13 +1,16 @@
 # Exercise 5: Merge vs Rebase vs Cherry-pick
 
 ## Goal
+
 Understand in practice the differences between `merge`, `rebase`, and `cherry-pick` — and when to use each. Each step has its own isolated setup script so you can focus on one concept at a time without distractions.
 
 > 💡 **Tip**: After every meaningful change, run:
+> 
 > ```bash
 > git status
 > git log --oneline --graph --all
 > ```
+> 
 > Pay close attention to the **shape of the graph** — that is the key difference between these strategies.
 
 ---
@@ -47,8 +50,8 @@ sequenceDiagram
 ### Setup
 
 ```bash
-setup-exercise5-step1.bat
-cd ex5-step1
+setup-exercise4-step1.bat
+cd ex4-step1
 ```
 
 ### Starting state
@@ -106,8 +109,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step2.bat
-cd ex5-step2
+setup-exercise4-step2.bat
+cd ex4-step2
 ```
 
 ### Starting state
@@ -132,10 +135,11 @@ gitGraph
 
 ```bash
 git checkout main
-git merge hotfix/button-color
+git merge hotfix/button-color --ff-only
 ```
 
 **Expected output from Git**:
+
 ```
 Updating abc1234..def5678
 Fast-forward
@@ -170,8 +174,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step3.bat
-cd ex5-step3
+setup-exercise4-step3.bat
+cd ex4-step3
 ```
 
 ### Starting state
@@ -229,7 +233,7 @@ Because `feature/footer` is now directly ahead of `main` with no divergence, the
 
 ```bash
 git checkout main
-git merge feature/footer
+git merge feature/footer --ff-only
 ```
 
 ```bash
@@ -256,8 +260,8 @@ gitGraph
 ### Setup
 
 ```bash
-setup-exercise5-step4.bat
-cd ex5-step4
+setup-exercise4-step4.bat
+cd ex4-step4
 ```
 
 ### Starting state
@@ -285,7 +289,7 @@ The `v1.0.0` release was cut at `feat: add dashboard`. Since then, `main` has re
 
 ```bash
 git checkout main
-git log --oneline
+git log --oneline --graph --all
 ```
 
 Locate `fix: critical null pointer in auth` and copy its hash (e.g. `abc1234`).
@@ -327,23 +331,26 @@ gitGraph
 
 ## Command Summary
 
-| Command | Description |
-|---------|-------------|
-| `git merge <branch>` | Merge a branch (fast-forward if possible) |
-| `git merge --no-ff <branch> -m "msg"` | Force a merge commit even when FF is possible |
-| `git merge --ff-only <branch>` | Merge only if fast-forward is possible, abort otherwise |
-| `git rebase <branch>` | Replay current branch commits on top of `<branch>` |
-| `git rebase --abort` | Cancel a rebase in progress |
-| `git cherry-pick <hash>` | Copy a single commit to the current branch |
-| `git cherry-pick A..B` | Copy a range of commits |
-| `git cherry-pick --no-commit <hash>` | Apply changes without committing (to inspect first) |
-| `git cherry-pick --abort` | Cancel a cherry-pick in progress |
+| Command                               | Description                                             |
+| ------------------------------------- | ------------------------------------------------------- |
+| `git merge <branch>`                  | Merge a branch (fast-forward if possible)               |
+| `git merge --no-ff <branch> -m "msg"` | Force a merge commit even when FF is possible           |
+| `git merge --ff-only <branch>`        | Merge only if fast-forward is possible, abort otherwise |
+| `git reset --hard HEAD@{N}`           | Jump to a reflog entry                                  |
+| `git merge --abort`                   | Cancel an in-progress merge                             |
+| `git rebase <branch>`                 | Replay current branch commits on top of `<branch>`      |
+| `git rebase --abort`                  | Cancel a rebase in progress                             |
+| `git cherry-pick <hash>`              | Copy a single commit to the current branch              |
+| `git cherry-pick A..B`                | Copy a range of commits                                 |
+| `git cherry-pick --no-commit <hash>`  | Apply changes without committing (to inspect first)     |
+| `git cherry-pick --abort`             | Cancel a cherry-pick in progress                        |
 
 ---
 
 ## Extra Exercise (Optional): The Release Manager 🚀
 
 Your team uses the following branching strategy:
+
 - `main` — integration branch (all features merge here)
 - `release/vX.Y` — stable snapshots deployed to production
 - `feature/*` — one branch per feature
